@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Google Summer of Code 2018</title>
+<!-- 2018-04-27 Fri 16:30 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Manos Kirtas" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="styles/readtheorg/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="styles/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="styles/readtheorg/js/readtheorg.js"></script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Google Summer of Code 2018</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">Introduction&#xa0;&#xa0;&#xa0;<span class="tag"><span class="intro">intro</span></span></a></li>
+<li><a href="#sec-2">Community Bonding Period</a>
+<ul>
+<li><a href="#sec-2-1"><span class="todo TODO">TODO</span> Get InteliJ Setup Working and edit existing Wiki</a></li>
+<li><a href="#sec-2-2"><span class="todo STARTED">STARTED</span> Review PR #1506 and get merge.</a></li>
+<li><a href="#sec-2-3"><span class="todo TODO">TODO</span> Start looking at #4290</a></li>
+<li><a href="#sec-2-4"><span class="todo TODO">TODO</span> Break problem into smaller problems</a></li>
+<li><a href="#sec-2-5"><span class="todo STARTED">STARTED</span> Collect Some Useful Stuff</a></li>
+<li><a href="#sec-2-6"><span class="todo STARTED">STARTED</span> Community Communication</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">Organization Announced Period</a>
+<ul>
+<li><a href="#sec-3-1">Proposal</a></li>
+<li><a href="#sec-3-2">Contact with OWASP</a></li>
+<li><a href="#sec-3-3">Contact with ZAP</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">About Me&#xa0;&#xa0;&#xa0;<span class="tag"><span class="AboutMe">AboutMe</span></span></a>
+<ul>
+<li><a href="#sec-4-1">Contact Me</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">footnotes&#xa0;&#xa0;&#xa0;<span class="tag"><span class="Footnotes">Footnotes</span></span></a></li>
+</ul>
+</div>
+</div>
+<div class="left">
+<a href="https://www.owasp.org/index.php/Main_Page">
+<img src="./data/png/owasp-logo.png" alt="OWASP Logo" style="width:20px;height:20px;"> 
+</a>
+OWASP Organization
+</div>
+<div class="center">
+<h2> ZAP Project </h2>
+</div>
+<div class="center">
+<a href="https://github.com/zaproxy/zaproxy">
+<img src="./data/png/zap64x64.png" alt="ZAP Logo"> 
+</a>
+</div>
+<div class="right">
+WebSocket Active Scan 
+<a href="https://github.com/zaproxy/zaproxy/issues/4276">
+<img src="./data/png/GitHub-Mark-32px.png" alt="GitHub Logo" style="width:20px;height:20px;"> 
+</a>
+</div>
+
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">Introduction&#xa0;&#xa0;&#xa0;<span class="tag"><span class="intro">intro</span></span></h2>
+<div class="outline-text-2" id="text-1">
+
+<p>
+This project aims to support for Active Scan to WebSocket extension of ZAP.
+WebSockets is a very recent protocol, which was standardized in 2011.
+One of the basic features of WebSocket is establishing a connection over TCP and remaining open.
+In that way it allows the server and the client to create a full-duplex communication channel, thus allowing both of them to truly communicate asynchronously.
+This it the biggest advantage of WebSocket contrary to traditional Ajax Request/Response.
+That is the reason the WS  is suitable for chats, messages notifications, monitoring etc.
+Furthermore, recent years WS potocol was used widely over the web applications.
+With the current version of ZAP we are able to intercept and show WS payloads, set breakpoint on specific types of WS’s payloads and fuzz payloads.
+Also ZAP WS add-on is considered as a reliable tool for WS communication analysis and debuging.
+I strongly believe that active scan extension of ZAP will be make it an even more powerful tool.  
+</p>
+
+<p>
+But which are the vulnerabilities; And what the active scans we can make for;
+Active scans include tests to web application in Error<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>, Blind<sup><a id="fnr.2" name="fnr.2" class="footref" href="#fn.2">2</a></sup> and Login by pass<sup><a id="fnr.3" name="fnr.3" class="footref" href="#fn.3">3</a></sup> SQL Injections vulnerabilities.
+To accomplish our scans we can test web application using Time Based techniques<sup><a id="fnr.4" name="fnr.4" class="footref" href="#fn.4">4</a></sup>.
+The scans will be able to test either specific or already established connections. 
+At this moment, we are not able to automatically establish connection with AjaxSpider.
+So, my long term goal about that is to establish and scan all websocket connections under a specific endpoint. 
+</p>
+
+<p>
+Another significant clue about websocket vulnerabilities is that the WebSocket protocol doesn’t handle authentication.
+Practically this means that, a WebSocket opened from a page behind authentication  doesn’t “automatically” receive any sort of authentication; you need to take steps to also secure the WebSocket connection.
+That makes possible to establish connection without authentication making use of http and origin headers field of the client.
+WebSocket is a nightmare because it does not follow Same-origin Policy browser restrictions.
+That vulnerability was known as WebSocket Hijacking.
+</p>
+
+<p>
+Some others possible scans at WebSockets are the classic bruteforce attack<sup><a id="fnr.5" name="fnr.5" class="footref" href="#fn.5">5</a></sup>, Command execution<sup><a id="fnr.6" name="fnr.6" class="footref" href="#fn.6">6</a></sup>,
+Local<sup><a id="fnr.7" name="fnr.7" class="footref" href="#fn.7">7</a></sup> and Remote<sup><a id="fnr.8" name="fnr.8" class="footref" href="#fn.8">8</a></sup> file inclusion. In addition, some more challenging attacks at WebSockets are the Stored and Reflected Cross-Site Scripting.
+</p>
+
+<p>
+At the end of the coding period I am going to commit a basic infrastructure supports active scans. 
+I strongly believe that if we will have the basic infrastructure, we could easily add some of the
+above scans (as more as possible).
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">Community Bonding Period</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>
+My proposal was accepted!
+</p>
+
+<p>
+For the next few days it's the community bonding period.
+I will take advantage of this time to let the community know about my project and it's goals,
+as well as get a head start on the coding period. At this time, I think to collect some useful stuff 
+(paper, articles, piece of code etc) about WebSocket. Also, I want to familiarized more with code base. For 
+that reason I review my PR (<a href="https://github.com/zaproxy/zap-extensions/pull/1506">#1506</a>) to get merge. In addition, I am going to look at issue <a href="https://github.com/zaproxy/zaproxy/issues/4290">#4290</a> which is necessary
+for WebSocket Active scan.
+</p>
+</div>
+
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="todo TODO">TODO</span> Get InteliJ Setup Working and edit existing Wiki</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+I am able to build WebSocket extension but I have had some problems with some other extensions. 
+In addition, I am editing the <a href="https://github.com/zaproxy/zaproxy/wiki/HowToBuildZapWithIntellij">wiki</a> about building with InteliJ but before that I want to be sure I build it properly.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="todo STARTED">STARTED</span> Review PR <a href="https://github.com/zaproxy/zap-extensions/pull/1506">#1506</a> and get merge.</h3>
+<div class="outline-text-3" id="text-2-2">
+<ul class="org-ul">
+<li>State "STARTED"    from "TODO"       <span class="timestamp-wrapper"><span class="timestamp">[2018-04-27 Fri 16:27]</span></span>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="todo TODO">TODO</span> Start looking at <a href="https://github.com/zaproxy/zaproxy/issues/4290">#4290</a></h3>
+</div>
+
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="todo TODO">TODO</span> Break problem into smaller problems</h3>
+<div class="outline-text-3" id="text-2-4">
+</div><div id="outline-container-sec-2-4-1" class="outline-4">
+<h4 id="sec-2-4-1"><span class="todo TODO">TODO</span> Reopen websocket connection to (re)send messages <a href="https://github.com/zaproxy/zaproxy/issues/4290">#4290</a></h4>
+</div>
+<div id="outline-container-sec-2-4-2" class="outline-4">
+<h4 id="sec-2-4-2"><span class="todo TODO">TODO</span> Scan an already established WebSocket connection</h4>
+</div>
+<div id="outline-container-sec-2-4-3" class="outline-4">
+<h4 id="sec-2-4-3"><span class="todo WAITING">WAITING</span> Establish Connection with AjaxSpider <a href="https://github.com/zaproxy/zaproxy/issues/4521">#4521</a></h4>
+</div>
+</div>
+
+<div id="outline-container-sec-2-5" class="outline-3">
+<h3 id="sec-2-5"><span class="todo STARTED">STARTED</span> Collect Some Useful Stuff</h3>
+<div class="outline-text-3" id="text-2-5">
+<ul class="org-ul">
+<li><a href="http://www.ub.tuwien.ac.at/dipl/2013/AC07815487.pdf">On WebSockets in Penetration Testing (by Robert Koch)</a>
+</li>
+<li><a href="https://www.owasp.org/index.php/Testing_WebSockets_(OTG-CLIENT-010)">Testing WebSockets (by OWASP)</a> 
+</li>
+<li><a href="http://www.theseus.fi/bitstream/handle/10024/113390/Harri+Kuosmanen+-+Masters+thesis+-+Security+Testing+of+WebSockets+-+Final.pdf;jsessionid=471ECF2E160DB23F22D425DBC55C2A7D?sequence=1">Security Testing of WebSockets (by Harri Kuosmanen)</a>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-2-6" class="outline-3">
+<h3 id="sec-2-6"><span class="todo STARTED">STARTED</span> Community Communication</h3>
+<div class="outline-text-3" id="text-2-6">
+<ul class="org-ul">
+<li>[DONE] Kickoff Meeting <span class="timestamp-wrapper"><span class="timestamp">&lt;2018-04-26 Thu&gt;</span></span> 
+</li>
+<li>[DONE] Email Dev Group <span class="timestamp-wrapper"><span class="timestamp">&lt;2018-04-27 Fri&gt;</span></span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">Organization Announced Period</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1">Proposal</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+You can take a look at my proposal <a href="data/pdf/KirtasEmmanouil-ZAP_OWASP-prop.pdf">here</a>.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2">Contact with OWASP</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+My first contact with OWASP organization was when I was looking for information about my thesis.
+Since then, I frequently read articles and I even own some books from the organization.
+Hence, the moment that this organization was announced to be part of GSoC, it was the first (of the participating organizations) that I wanted to look into.
+In addition, when I read OWASP’s “philosophy” I realized that I wanted to get involved solely with the organization’s projects.
+In my opinion, OWASP’s trend promotes the development of secure software, thus becoming integral for developers who respect users and their personal data.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3">Contact with ZAP</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+As a junior developer who cares about the security of applications I find ZAP an essential tool in developing and testing lifecycle.
+I like the philosophy of an easy to use tool, which could be used by non security experts.
+Of course, besides that, ZAP is a powerful tool for resolving many advanced issues.
+That is the reason I got immediately involved with ZAP by learning how to use it from their many beginners’ tutorial videos, wikis and also by asking for help from the community.
+I also started to use ZAP in real case scenarios with the help of DVWS<sup><a id="fnr.9" name="fnr.9" class="footref" href="#fn.9">9</a></sup>.
+At the same time, I have started to familiarize with code base by implementing a FirstIdealIssue (issue <a href="https://github.com/zaproxy/zaproxy/issues/1382">#1382)</a> which was related to WebSockets.
+I develop a filter based on websockets payloads. Specific, I add a regex and non-regex filter to WebSocket Panel (PR <a href="https://github.com/zaproxy/zap-extensions/pull/1506">#1506)</a>. 
+In addition, I have noticed a bug in community about AjaxSpider (issue <a href="https://github.com/zaproxy/zaproxy/issues/4521">#5521</a>).
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">About Me&#xa0;&#xa0;&#xa0;<span class="tag"><span class="AboutMe">AboutMe</span></span></h2>
+<div class="outline-text-2" id="text-4">
+<p>
+First of all, for the past 6 years I have been studying and practicing the Computer Science.
+My interests include, development and operation of software, as well as research.
+More specifically, I am very interested in security of systems and privacy, particularly after having participated in relevant conferences these past 2 years.
+Furthermore, I am very fond of artificial intelligence techniques and machine learning.
+On account of this, for the past year and a half I have been implementing on java an academic paper, titled “A framework for Access Control with Inference Constraints”<sup><a id="fnr.10" name="fnr.10" class="footref" href="#fn.10">10</a></sup>.
+Subsequently, my personal goal for the future, is to combine software security with machine learning and fuzz logic techniques. 
+</p>
+
+<p>
+In addition to the above, I have worked as a member of a photo-shooting cooperative.
+This experience has given me the opportunity to work on data base management (MySQL) and web application development.
+Also, I had the opportunity to learn how to work as an equal part of a group in a work environment.
+</p>
+
+<p>
+ Additionally, all these years I have contributed to various communities, such as ACM in Greek student chapter in order to develop a game using game engine unity.
+ Furthermore, I have participated in ELLAK’s summer school of code for two years in a row<sup><a id="fnr.11" name="fnr.11" class="footref" href="#fn.11">11</a></sup><sup>, </sup><sup><a id="fnr.12" name="fnr.12" class="footref" href="#fn.12">12</a></sup>.
+ Lately, I have been part of a student group, which deals with Security issues.
+ Currently, we have been working on basic Pen Test and Reverse Engineering techniques through OverTheWire and HatchTheBox platforms.
+Hence, we aspire to participate, in the future, in some CTFs.
+</p>
+
+<p>
+Last but not least, I have been a Linux user for as long as I can remember, however I do not consider myself as a SuperUser, as I have further elaborated on Linux systems only these past 3 years. I am also very fond of configuring the open source programs I use, such as the i3 windows manager, Emacs Editor, tmux, zsh, as well as Arch, which I still run on Virtual Machine (I hope that it will soon become my basic OS). 
+Finally, I use InteliJ IDE to develop and build Java applications
+</p>
+</div>
+<div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1">Contact Me</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+In irc at mozilla server especially in channel #websectools with nickname "manos"
+</p>
+
+<div class="center">
+<a href="https://github.com/ManosMagnus">
+<img src="./data/png/GitHub-Mark-32px.png" alt="My GitHub Page"> 
+</a>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5">footnotes&#xa0;&#xa0;&#xa0;<span class="tag"><span class="Footnotes">Footnotes</span></span></h2>
+<div class="outline-text-2" id="text-5">
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+<a href="https://www.owasp.org/index.php/SQL_Injection">https://www.owasp.org/index.php/SQL_Injection</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.2" name="fn.2" class="footnum" href="#fnr.2">2</a></sup> <p class="footpara">
+<a href="https://www.owasp.org/index.php/Blind_SQL_Injection">https://www.owasp.org/index.php/Blind_SQL_Injection</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.3" name="fn.3" class="footnum" href="#fnr.3">3</a></sup> <p class="footpara">
+<a href="https://www.owasp.org/index.php/SQL_Injection_Bypassing_WAF">https://www.owasp.org/index.php/SQL_Injection_Bypassing_WAF</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.4" name="fn.4" class="footnum" href="#fnr.4">4</a></sup> <p class="footpara">
+<a href="https://www.owasp.org/index.php/Testing_for_SQL_Injection">https://www.owasp.org/index.php/Testing_for_SQL_Injection</a><sub>(OTG-INPVAL-005)</sub>Time<sub>delay</sub><sub>Exploitation</sub><sub>technique</sub>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.5" name="fn.5" class="footnum" href="#fnr.5">5</a></sup> <p class="footpara">
+<a href="https://devcenter.heroku.com/articles/websocket-security">https://devcenter.heroku.com/articles/websocket-security</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.6" name="fn.6" class="footnum" href="#fnr.6">6</a></sup> <p class="footpara">
+<a href="http://www.christian-schneider.net/CrossSiteWebSocketHijacking.html">http://www.christian-schneider.net/CrossSiteWebSocketHijacking.html</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.7" name="fn.7" class="footnum" href="#fnr.7">7</a></sup> <p class="footpara">
+<a href="https://www.owasp.org/index.php/Brute_force_attack">https://www.owasp.org/index.php/Brute_force_attack</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.8" name="fn.8" class="footnum" href="#fnr.8">8</a></sup> <p class="footpara">
+<a href="https://www.owasp.org/index.php/Command_Injection">https://www.owasp.org/index.php/Command_Injection</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.9" name="fn.9" class="footnum" href="#fnr.9">9</a></sup> <p class="footpara">
+<a href="https://www.owasp.org/index.php/OWASP_Damn_Vulnerable_Web_Sockets_(DVWS)">https://www.owasp.org/index.php/OWASP_Damn_Vulnerable_Web_Sockets_(DVWS)</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.10" name="fn.10" class="footnum" href="#fnr.10">10</a></sup> <p class="footpara">
+<a href="http://ieeexplore.ieee.org/abstract/document/6032355/?anchor=authors">http://ieeexplore.ieee.org/abstract/document/6032355/?anchor=authors</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.11" name="fn.11" class="footnum" href="#fnr.11">11</a></sup> <p class="footpara">
+<a href="https://ma.ellak.gr/">https://ma.ellak.gr/</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.12" name="fn.12" class="footnum" href="#fnr.12">12</a></sup> <p class="footpara">
+<a href="https://github.com/ManosMagnus/Easy-Ticket-App">https://github.com/ManosMagnus/Easy-Ticket-App</a>
+</p></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<p class="date">Date: 2018-04-26</p>
+<p class="author">Author: Manos Kirtas</p>
+<p class="date">Created: 2018-04-27 Fri 16:30</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
