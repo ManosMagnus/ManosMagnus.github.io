@@ -1,0 +1,944 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>websocket_messages</title>
+<!-- 2018-05-24 Thu 12:32 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="manos" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">websocket_messages</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Damn Vulnerability Web Socket</a>
+<ul>
+<li><a href="#sec-1-1">1.1. /brute-force.php</a>
+<ul>
+<li><a href="#sec-1-1-1">1.1.1. Summary</a></li>
+<li><a href="#sec-1-1-2">1.1.2. Switching Protocol</a></li>
+<li><a href="#sec-1-1-3">1.1.3. Heartbeat Messages: None</a></li>
+<li><a href="#sec-1-1-4">1.1.4. Messages</a></li>
+<li><a href="#sec-1-1-5">1.1.5. Examples</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">1.2. /command-execution.php</a>
+<ul>
+<li><a href="#sec-1-2-1">1.2.1. Summary</a></li>
+<li><a href="#sec-1-2-2">1.2.2. Switching Protocol</a></li>
+<li><a href="#sec-1-2-3">1.2.3. Heartbeat Messages: None</a></li>
+<li><a href="#sec-1-2-4">1.2.4. Messages</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3">1.3. /csrf.php</a>
+<ul>
+<li><a href="#sec-1-3-1">1.3.1. Summary</a></li>
+<li><a href="#sec-1-3-2">1.3.2. Switching Protocol</a></li>
+<li><a href="#sec-1-3-3">1.3.3. Heartbeat Messages: None</a></li>
+<li><a href="#sec-1-3-4">1.3.4. Messages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-2">2. </a>
+<ul>
+<li><a href="#sec-2-1">2.1. Summary</a></li>
+<li><a href="#sec-2-2">2.2. HandShake</a></li>
+<li><a href="#sec-2-3">2.3. Heartbeat Messages</a></li>
+<li><a href="#sec-2-4">2.4. Messages</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. </a>
+<ul>
+<li><a href="#sec-3-1">3.1. Summary</a></li>
+<li><a href="#sec-3-2">3.2. Switching Protocol</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Damn Vulnerability Web Socket</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> /brute-force.php</h3>
+<div class="outline-text-3" id="text-1-1">
+</div><div id="outline-container-sec-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1"><span class="section-number-4">1.1.1</span> Summary</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<ul class="org-ul">
+<li>Host: dvws.local:8080    
+</li>
+<li>GET <a href="http://dvws.local:8080/authenticate-user-prepared">http://dvws.local:8080/authenticate-user-prepared</a> HTTP/1.1
+</li>
+<li>OPCODE: <code>1-TEXT</code>
+</li>
+<li>Outgoing Messages format: <code>JSON strings</code>
+</li>
+<li>Incoming Messages format: <code>HTML</code>
+</li>
+<li>Input encryption: <code>BASE64</code>
+</li>
+<li>PING/PONG: <code>None</code>
+</li>
+<li>Close message: OPCODE= <code>CLOSE</code>, TEXT= <code>1001</code> 
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2"><span class="section-number-4">1.1.2</span> Switching Protocol</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<ul class="org-ul">
+<li>With same GET request used to open the page
+</li>
+</ul>
+</div>
+<ol class="org-ol"><li><a id="sec-1-1-2-1" name="sec-1-1-2-1"></a>Request<br  /><div class="outline-text-5" id="text-1-1-2-1">
+<div class="org-src-container">
+
+<pre class="src src-html">GET http://dvws.local:8080/authenticate-user-prepared HTTP/1.1
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: el,en-US;q=0.7,en;q=0.3
+Sec-WebSocket-Version: 13
+Origin: http://localhost
+Sec-WebSocket-Key: iuYYjEqCpKoYq+GVC3d7Ng==
+Connection: keep-alive, Upgrade
+Pragma: no-cache
+Cache-Control: no-cache
+Upgrade: websocket
+Host: dvws.local:8080
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-1-2-2" name="sec-1-1-2-2"></a>Response<br  /><div class="outline-text-5" id="text-1-1-2-2">
+<pre class="example">
+HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: nXnIMpYSpNJrHKfWlDcj4VkgITY=
+X-Powered-By: Ratchet/0.3.5
+</pre>
+</div>
+</li></ol>
+</div>
+
+
+<div id="outline-container-sec-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3"><span class="section-number-4">1.1.3</span> Heartbeat Messages: None</h4>
+</div>
+
+<div id="outline-container-sec-1-1-4" class="outline-4">
+<h4 id="sec-1-1-4"><span class="section-number-4">1.1.4</span> Messages</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<ul class="org-ul">
+<li>OPCODE: <code>1-TEXT</code>
+</li>
+<li>Outgoing Messages format: <code>JSON strings</code>
+</li>
+<li>Incoming Messages format: <code>HTML</code>
+</li>
+<li>Input encryption: <code>BASE64</code>
+</li>
+<li>Usage: Used as to login form. Input directly used for MySQL query  
+</li>
+<li>Close message: OPCODE= <code>CLOSE</code>, TEXT= <code>1001</code> 
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-sec-1-1-5" class="outline-4">
+<h4 id="sec-1-1-5"><span class="section-number-4">1.1.5</span> Examples</h4>
+<div class="outline-text-4" id="text-1-1-5">
+</div><ol class="org-ol"><li><a id="sec-1-1-5-1" name="sec-1-1-5-1"></a>Example 1: Valid Input<br  /><div class="outline-text-5" id="text-1-1-5-1">
+<ul class="org-ul">
+<li>Input
+<div class="org-src-container">
+
+<pre class="src src-JSON">{"auth_user":"dGVzdA==","auth_pass":"Y2FzZQ=="}
+</pre>
+</div>
+
+<p>
+{
+ "auth<sub>user</sub>":"<b>BASE64 INPUT</b>",
+ "auth<sub>pass</sub>":"<b>BASE64 INPUT</b>"
+}
+</p>
+</li>
+
+<li>Output
+<div class="org-src-container">
+
+<pre class="src src-HTML">&lt;pre&gt;Incorrect username/password&lt;/pre&gt;
+</pre>
+</div>
+</li>
+</ul>
+</div>
+</li></ol>
+</div>
+</div>
+
+
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> /command-execution.php</h3>
+<div class="outline-text-3" id="text-1-2">
+</div><div id="outline-container-sec-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1"><span class="section-number-4">1.2.1</span> Summary</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<ul class="org-ul">
+<li>Host: dvws.local:8080    
+</li>
+<li>GET <a href="http://dvws.local:8080/command-execution">http://dvws.local:8080/command-execution</a> HTTP/1.1
+</li>
+<li>OPCODE: <code>1-TEXT</code>
+</li>
+<li>Outgoing Messages format: <code>Plain Text</code>
+</li>
+<li>Incoming Messages format: <code>Plain Text</code>
+</li>
+<li>Input encryption: <code>None</code>
+</li>
+<li>PING/PONG: <code>None</code>
+</li>
+<li>Close message: OPCODE= <code>CLOSE</code>, TEXT= <code>1001</code>     
+</li>
+<li>Usage: Execute a ping command with user's input
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-sec-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2"><span class="section-number-4">1.2.2</span> Switching Protocol</h4>
+<div class="outline-text-4" id="text-1-2-2">
+</div><ol class="org-ol"><li><a id="sec-1-2-2-1" name="sec-1-2-2-1"></a>Request<br  /><div class="outline-text-5" id="text-1-2-2-1">
+<pre class="example">
+GET http://dvws.local:8080/command-execution HTTP/1.1
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: el,en-US;q=0.7,en;q=0.3
+Sec-WebSocket-Version: 13
+Origin: http://localhost
+Sec-WebSocket-Key: HfUsi/6xjsJy1M9dTeU0nw==
+Connection: keep-alive, Upgrade
+Pragma: no-cache
+Cache-Control: no-cache
+Upgrade: websocket
+Host: dvws.local:8080
+</pre>
+</div>
+</li>
+
+
+<li><a id="sec-1-2-2-2" name="sec-1-2-2-2"></a>Response<br  /><div class="outline-text-5" id="text-1-2-2-2">
+<pre class="example">
+HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: 6nMG5HTVBBhzJ9q0xEpzBK8+dfg=
+X-Powered-By: Ratchet/0.3.5
+</pre>
+</div>
+</li></ol>
+</div>
+
+
+
+<div id="outline-container-sec-1-2-3" class="outline-4">
+<h4 id="sec-1-2-3"><span class="section-number-4">1.2.3</span> Heartbeat Messages: None</h4>
+</div>
+
+<div id="outline-container-sec-1-2-4" class="outline-4">
+<h4 id="sec-1-2-4"><span class="section-number-4">1.2.4</span> Messages</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<ul class="org-ul">
+<li>OPCODE: <code>1-TEXT</code>
+</li>
+<li>Outgoing Messages format: <code>Plain Text</code>
+</li>
+<li>Incoming Messages format: <code>Plain Text</code>
+</li>
+<li>Input encryption: None
+</li>
+<li>Close message: OPCODE= <code>CLOSE</code>, TEXT= <code>1001</code> 
+</li>
+<li>Usage: Execute a ping command with user's input
+</li>
+</ul>
+</div>
+
+<ol class="org-ol"><li><a id="sec-1-2-4-1" name="sec-1-2-4-1"></a>Example 1<br  /><div class="outline-text-5" id="text-1-2-4-1">
+<ul class="org-ul">
+<li>Input
+<code>www.google.com</code>
+</li>
+
+<li>Output
+<pre class="example">
+PING www.google.com (172.217.16.68) 56(84) bytes of data.
+64 bytes from ham11s01-in-f4.1e100.net (172.217.16.68): icmp_seq=1 ttl=50 time=78.9 ms
+64 bytes from ham11s01-in-f4.1e100.net (172.217.16.68): icmp_seq=2 ttl=50 time=78.8 ms
+64 bytes from ham11s01-in-f4.1e100.net (172.217.16.68): icmp_seq=3 ttl=50 time=83.0 ms
+
+--- www.google.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 78.881/80.287/83.039/1.946 ms
+</pre>
+</li>
+</ul>
+</div>
+</li></ol>
+</div>
+</div>
+
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> /csrf.php</h3>
+<div class="outline-text-3" id="text-1-3">
+</div><div id="outline-container-sec-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1"><span class="section-number-4">1.3.1</span> Summary</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<ul class="org-ul">
+<li>Host: dvws.local:8080    
+</li>
+<li>GET <a href="http://dvws.local:8080/change-password">http://dvws.local:8080/change-password</a> HTTP/1.1
+</li>
+<li>OPCODE: <code>1-TEXT</code>
+</li>
+<li>Outgoing Messages format: <code>JSON</code>
+</li>
+<li>Incoming Messages format: <code>Plain Text/ HTML</code>
+</li>
+<li>Input encryption: <code>BASE64</code>
+</li>
+<li>PING/PONG: <code>None</code>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> Switching Protocol</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<p>
+Same as before 
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3"><span class="section-number-4">1.3.3</span> Heartbeat Messages: None</h4>
+</div>
+
+<div id="outline-container-sec-1-3-4" class="outline-4">
+<h4 id="sec-1-3-4"><span class="section-number-4">1.3.4</span> Messages</h4>
+<div class="outline-text-4" id="text-1-3-4">
+<ul class="org-ul">
+<li>OPCODE: <code>1-TEXT</code>
+</li>
+<li>Outgoing Messages format: <code>JSON</code>
+</li>
+<li>Incoming Messages format: <code>Plain Text/ HTML</code>
+</li>
+<li>Input encryption: <code>BASE64</code>
+</li>
+<li>Usage: Used as to login form. Input directly used for MySQL query  
+</li>
+<li>Close message: OPCODE= <code>CLOSE</code>, TEXT= <code>1001</code> 
+</li>
+<li>Usage: Execute a ping command with user's input
+</li>
+</ul>
+</div>
+
+
+<ol class="org-ol"><li><a id="sec-1-3-4-1" name="sec-1-3-4-1"></a>Example 1<br  /><div class="outline-text-5" id="text-1-3-4-1">
+<ul class="org-ul">
+<li>Input
+<div class="org-src-container">
+
+<pre class="src src-javascript">{<span style="color: #bdbc61;">"auth_user"</span>:<span style="color: #bdbc61;">"dGVzdA=="</span>,<span style="color: #bdbc61;">"auth_pass"</span>:<span style="color: #bdbc61;">"Y2FzZQ=="</span>}
+</pre>
+</div>
+
+<p>
+{
+ "auth<sub>user</sub>":"<b>BASE64 INPUT</b>",
+ "auth<sub>pass</sub>":"<b>BASE64 INPUT</b>"
+}
+</p>
+</li>
+
+<li>Output
+<div class="org-src-container">
+
+<pre class="src src-html">&lt;<span style="color: #6aaf50;">pre</span>&gt;Incorrect username/password&lt;/<span style="color: #6aaf50;">pre</span>&gt;
+</pre>
+</div>
+</li>
+</ul>
+</div>
+</li>
+
+
+<li><a id="sec-1-3-4-2" name="sec-1-3-4-2"></a>Example 2 (Successful Log In)<br  /><div class="outline-text-5" id="text-1-3-4-2">
+<ul class="org-ul">
+<li>Input
+<div class="org-src-container">
+
+<pre class="src src-javascript">{
+    <span style="color: #bdbc61;">"auth_user"</span>:<span style="color: #bdbc61;">"YWRtaW4="</span>,
+    <span style="color: #bdbc61;">"auth_pass"</span>:<span style="color: #bdbc61;">"YWRtaW4="</span>
+}
+</pre>
+</div>
+</li>
+
+<li>Output 
+
+<div class="org-src-container">
+
+<pre class="src src-html">&lt;<span style="color: #6aaf50;">div</span> <span style="color: #baba36;">class</span>='alert alert-success'&gt;
+  Welcome to your account. How are you Super Administrator?
+  &lt;<span style="color: #6aaf50;">a</span> <span style="color: #baba36;">href</span>='logout.php' <span style="color: #baba36;">class</span>='btn btn-danger btn-md'&gt;Logout&lt;/<span style="color: #6aaf50;">a</span>&gt;
+&lt;/<span style="color: #6aaf50;">div</span>&gt;
+</pre>
+</div>
+</li>
+</ul>
+</div>
+</li>
+
+<li><a id="sec-1-3-4-3" name="sec-1-3-4-3"></a>Example (Change password)<br  /><div class="outline-text-5" id="text-1-3-4-3">
+<ul class="org-ul">
+<li>Input
+<div class="org-src-container">
+
+<pre class="src src-javascript">{<span style="color: #bdbc61;">"npass"</span>:<span style="color: #bdbc61;">"test"</span>,<span style="color: #bdbc61;">"cpass"</span>:<span style="color: #bdbc61;">"tes"</span>}
+</pre>
+</div>
+</li>
+
+<li>Output
+<div class="org-src-container">
+
+<pre class="src src-html">Password changed successfully.
+</pre>
+</div>
+</li>
+</ul>
+</div>
+</li></ol>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> <a href="http://demos.kaazing.com/echo/index.html">http://demos.kaazing.com/echo/index.html</a></h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Summary</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>Host: demos.kaazing.com
+</li>
+<li>GET <a href="http://demos.kaazing.com/echo?.kl=Y">http://demos.kaazing.com/echo?.kl=Y</a> HTTP/1.1
+</li>
+<li>OPCODE: <code>1-TEXT</code>
+</li>
+<li>Outgoing Messages format: <code>PLAIN TEXT/BINARY</code>
+</li>
+<li>Incoming Messages format: <code>PLAIN TEXT/BINARY</code>
+</li>
+<li>Input encryption: None
+</li>
+<li>PING/PONG: With text opcode 
+</li>
+<li>Close message: OPCODE= <code>CLOSE</code>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> HandShake</h3>
+<div class="outline-text-3" id="text-2-2">
+<ul class="org-ul">
+<li>Request
+<div class="org-src-container">
+
+<pre class="src src-html">GET http://demos.kaazing.com/echo?.kl=Y HTTP/1.1
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: el,en-US;q=0.7,en;q=0.3
+Sec-WebSocket-Version: 13
+Origin: http://demos.kaazing.com
+Sec-WebSocket-Protocol: x-kaazing-handshake
+Sec-WebSocket-Key: zRJV+kcCeG0XhZytdDudcw==
+Cookie: __zlcmid=mWhMCXCgZdrJNU
+Connection: keep-alive, Upgrade
+Pragma: no-cache
+Cache-Control: no-cache
+Upgrade: websocket
+Host: demos.kaazing.com
+</pre>
+</div>
+</li>
+
+<li>Response
+<div class="org-src-container">
+
+<pre class="src src-html">HTTP/1.1 101 Web Socket Protocol Handshake
+Connection: Upgrade
+Date: Mon, 21 May 2018 13:36:38 GMT
+Sec-WebSocket-Accept: ohoLD5o+M8nyXhah58AAD9ocZhM=
+Sec-WebSocket-Protocol: x-kaazing-handshake
+Server: Kaazing Gateway
+Upgrade: websocket
+</pre>
+</div>
+</li>
+
+<li>On HandShake Messages
+
+<ol class="org-ol">
+<li>Incoming BINARY
+HEX: ef83bf4e
+</li>
+
+<li>Outgoing TEXT
+TEXT: 
+<div class="org-src-container">
+
+<pre class="src src-html">GET /echo HTTP/1.1
+WebSocket-Protocol: 
+Sec-WebSocket-Protocol: 
+Sec-WebSocket-Extensions: x-kaazing-idle-timeout,x-kaazing-ping-pong,x-kaazing-http-revalidate
+</pre>
+</div>
+</li>
+
+<li>Incoming BINARY
+<div class="org-src-container">
+
+<pre class="src src-html">HTTP/1.1 101 Web Socket Protocol Handshake
+Connection: Upgrade
+Date: Mon, 21 May 2018 13:41:03 GMT
+Sec-WebSocket-Accept: zeGazs1r0a+PRzZHz8TmoebMxl0=
+Sec-WebSocket-Extensions: x-kaazing-idle-timeout; timeout=60000
+Sec-WebSocket-Extensions: x-kaazing-ping-pong; 01010102
+Server: Kaazing Gateway
+Upgrade: websocket
+</pre>
+</div>
+</li>
+
+<li>Incoming BINARY (Empty)
+</li>
+
+<li>Incoming BINARY
+HEX: ef83bf4e
+</li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> Heartbeat Messages</h3>
+<div class="outline-text-3" id="text-2-3">
+<ul class="org-ul">
+<li>Using OPCODE: TEXT (every 60000ms)
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="right" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Direction</th>
+<th scope="col" class="left">Opcode</th>
+<th scope="col" class="right">Text</th>
+<th scope="col" class="left">Hex</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">Incoming (ping)</td>
+<td class="left">TEXT</td>
+<td class="right">6</td>
+<td class="left">01 01 01 02 0a 00</td>
+</tr>
+
+<tr>
+<td class="left">Outgoing (pong)</td>
+<td class="left">TEXT</td>
+<td class="right">6</td>
+<td class="left">01 01 01 02 09 00</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> Messages</h3>
+<div class="outline-text-3" id="text-2-4">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Button</th>
+<th scope="col" class="left">Opcode</th>
+<th scope="col" class="left">Text</th>
+<th scope="col" class="left">Binary</th>
+<th scope="col" class="left">Encoding</th>
+<th scope="col" class="left">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">Send Text</td>
+<td class="left">Text</td>
+<td class="left">Hello, WebSocket!</td>
+<td class="left">&lt;text2binary&gt;</td>
+<td class="left">-</td>
+<td class="left">Echo</td>
+</tr>
+
+<tr>
+<td class="left">Send Blob</td>
+<td class="left">Binary</td>
+<td class="left">Hello, WebSocket!</td>
+<td class="left">&lt;text2binary&gt;</td>
+<td class="left">-</td>
+<td class="left">Echo</td>
+</tr>
+
+<tr>
+<td class="left">Send Array Buffer</td>
+<td class="left">Binary</td>
+<td class="left">Hello, WebSocket!</td>
+<td class="left">&lt;text2binary&gt;</td>
+<td class="left">-</td>
+<td class="left">Echo</td>
+</tr>
+
+<tr>
+<td class="left">Send Byte Buffer</td>
+<td class="left">Binary</td>
+<td class="left">Hello, WebSocket!</td>
+<td class="left">&lt;text2binary&gt;</td>
+<td class="left">-</td>
+<td class="left">Echo</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> <a href="https://websocket.org/demos/todomvc/run/index.html#/">https://websocket.org/demos/todomvc/run/index.html#/</a></h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> Summary</h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li>Host: demos.kaazing.com
+</li>
+<li>GET <a href="http://demos.kaazing.com/echo?.kl=Y">http://demos.kaazing.com/echo?.kl=Y</a> HTTP/1.1
+</li>
+<li>OPCODE: <code>1-TEXT</code>
+</li>
+<li>Outgoing Messages format: <code>PLAIN TEXT/BINARY</code>
+</li>
+<li>Incoming Messages format: <code>PLAIN TEXT/BINARY</code>
+</li>
+<li>Input encryption: None
+</li>
+<li>PING/PONG: 
+</li>
+<li>Close message: OPCODE= <code>CLOSE</code>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> Switching Protocol</h3>
+<div class="outline-text-3" id="text-3-2">
+<ul class="org-ul">
+<li>At First Message
+</li>
+
+<li>Request 
+<div class="org-src-container">
+
+<pre class="src src-html">GET https://sandbox.kaazing.net/amqp091?.kl=Y HTTP/1.1
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: el,en-US;q=0.7,en;q=0.3
+Sec-WebSocket-Version: 13
+Origin: https://websocket.org
+Sec-WebSocket-Protocol: x-kaazing-handshake
+Sec-WebSocket-Key: BBW1wXIzGZvRakETHUplng==
+Connection: keep-alive, Upgrade
+Pragma: no-cache
+Cache-Control: no-cache
+Upgrade: websocket
+Host: sandbox.kaazing.net
+</pre>
+</div>
+</li>
+
+<li>Response
+<div class="org-src-container">
+
+<pre class="src src-html">HTTP/1.1 101 Web Socket Protocol Handshake
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Headers: content-type
+Access-Control-Allow-Headers: authorization
+Access-Control-Allow-Headers: x-websocket-extensions
+Access-Control-Allow-Headers: x-websocket-version
+Access-Control-Allow-Headers: x-websocket-protocol
+Access-Control-Allow-Origin: https://websocket.org
+Connection: Upgrade
+Date: Mon, 21 May 2018 15:32:10 GMT
+Sec-WebSocket-Accept: kf0KYaDtZLFKbRnopKC72GNwnm0=
+Sec-WebSocket-Protocol: x-kaazing-handshake
+Server: Kaazing Gateway
+Upgrade: websocket
+</pre>
+</div>
+
+<ol class="org-ol">
+<li>Incoming: Binary
+
+<p>
+Binary2Text:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-html">HTTP/1.1 101 Web Socket Protocol Handshake
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Headers: content-type
+Access-Control-Allow-Headers: authorization
+Access-Control-Allow-Headers: x-websocket-extensions
+Access-Control-Allow-Headers: x-websocket-version
+Access-Control-Allow-Headers: x-websocket-protocol
+Access-Control-Allow-Origin: https://websocket.org
+Connection: Upgrade
+Date: Mon, 21 May 2018 15:36:49 GMT
+Sec-WebSocket-Accept: i4fElBh/RDx4vZzU1+0C+J2FXrQ=
+Sec-WebSocket-Extensions: x-kaazing-ping-pong; 01010102
+Server: Kaazing Gateway
+Upgrade: websocket
+</pre>
+</div>
+</li>
+
+<li>Incoming BINARY (Empty)
+</li>
+
+<li>Incoming BINARY          
+Binary: ef83bf4e
+</li>
+
+<li>Outgoing BINARY
+Binary2Text: AMQP
+</li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: manos</p>
+<p class="date">Created: 2018-05-24 Thu 12:32</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
