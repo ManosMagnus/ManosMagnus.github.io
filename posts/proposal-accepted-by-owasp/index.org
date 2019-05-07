@@ -1,0 +1,13 @@
+#+BEGIN_COMMENT
+.. title: Proposal Accepted by OWASP
+.. slug: proposal-accepted-by-owasp
+.. date: 2019-05-07 12:24:56 UTC+03:00
+.. tags: community_bonding_period
+.. category: community_bonding
+.. link: 
+.. description: 
+.. type: text
+
+#+END_COMMENT
+
+This is a initial post

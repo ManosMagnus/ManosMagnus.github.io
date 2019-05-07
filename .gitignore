@@ -1,6 +1,0 @@
-*.org
-*.txt
-!/data/org/*.org
-!/data/websocket_examples/WebSocketExamples.org
-
-
