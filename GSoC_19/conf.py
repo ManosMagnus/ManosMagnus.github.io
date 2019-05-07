@@ -1348,3 +1348,6 @@ COMPILERS["orgmode"] = ('.org',)
 # Add org files to your POSTS, PAGES
 POSTS = POSTS + (("posts/*.org", "posts", "post.tmpl"),)
 PAGES = PAGES + (("stories/*.org", "stories", "story.tmpl"),)
+
+GITHUB_SOURCE_BRANCH = 'sources'
+GITHUB_DEPLOY_BRANCH = 'master'
