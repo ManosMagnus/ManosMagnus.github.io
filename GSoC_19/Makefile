@@ -15,4 +15,4 @@ setup:
 	@echo "pip install --upgrade pip 'Nikola[extras]';"
 
 help:
-@echo "To setup Nikola environment, please use 'eval \$$(make setup)'."
+	@echo "To setup Nikola environment, please use 'eval \$$(make setup)'."

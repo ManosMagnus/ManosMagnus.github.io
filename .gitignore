@@ -3,9 +3,9 @@
 !/data/org/*.org
 !/data/websocket_examples/WebSocketExamples.org
 *.py[cod]
-__pycache__
-cache
-output
-.doit.db
-GSoC_19/env/
+GSoC_19/__pycache__
+GSoC_19/cache
+GSoC_19/output
+GSoC_19/.doit.db
+GSoC_19/_env/
 
