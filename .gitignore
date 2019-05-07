@@ -2,5 +2,10 @@
 *.txt
 !/data/org/*.org
 !/data/websocket_examples/WebSocketExamples.org
-
+*.py[cod]
+__pycache__
+cache
+output
+.doit.db
+GSoC_19/env/
 
