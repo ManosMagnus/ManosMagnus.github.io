@@ -1,0 +1,16 @@
+#+BEGIN_COMMENT
+.. title: Access to GSoC'2018's blog
+.. slug: access-to-gsoc2018s-blog
+.. date: 2019-05-07 16:06:58 UTC+03:00
+.. tags: gsoc2018, websockets
+.. category: gsoc2018
+.. link: 
+.. description: This post is a reference to previous year's Google Summer of Code
+.. type: text
+
+#+END_COMMENT
+
+
+In my [[https://manosmagnus.github.io/posts/GSoC_18/][GSoC'18 blog]] you can find my previous proposal about WebSocket Active
+Scanning. There are also information related with ZAP functionality and problems
+which are faced.
