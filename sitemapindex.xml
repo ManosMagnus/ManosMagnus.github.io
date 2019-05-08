@@ -6,11 +6,35 @@
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/cat_general.xml</loc>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/cat_gsoc2018.xml</loc>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/general.xml</loc>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/gsoc19.xml</loc>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/gsoc2018.xml</loc>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/websockets.xml</loc>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>https://manosmagnus.github.io/GSoC_19/rss.xml</loc>
-  <lastmod>2019-05-08T09:11:00Z</lastmod>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://manosmagnus.github.io/GSoC_19/sitemap.xml</loc>
-  <lastmod>2019-05-08T09:11:00Z</lastmod>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
  </sitemap>
 </sitemapindex>

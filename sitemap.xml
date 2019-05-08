@@ -7,14 +7,50 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>https://manosmagnus.github.io/GSoC_19/</loc>
-  <lastmod>2019-05-08T09:11:00Z</lastmod>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://manosmagnus.github.io/GSoC_19/2019/</loc>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
  </url>
  <url>
   <loc>https://manosmagnus.github.io/GSoC_19/archive.html</loc>
-  <lastmod>2019-05-08T09:11:00Z</lastmod>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
  </url>
  <url>
   <loc>https://manosmagnus.github.io/GSoC_19/categories/</loc>
-  <lastmod>2019-05-08T09:11:00Z</lastmod>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/cat_general/</loc>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/cat_gsoc2018/</loc>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/general/</loc>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/gsoc19/</loc>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/gsoc2018/</loc>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/websockets/</loc>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://manosmagnus.github.io/GSoC_19/posts/access-to-gsoc2018s-blog/</loc>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://manosmagnus.github.io/GSoC_19/posts/gsoc19-accepted/</loc>
+  <lastmod>2019-05-08T09:16:00Z</lastmod>
  </url>
 </urlset>
