@@ -1,3 +1,4 @@
+#+BEGIN_COMMENT
 .. title: GSoC'19: Accepted!
 .. slug: gsoc19-accepted
 .. date: 2019-05-07 16:32:12 UTC+03:00
