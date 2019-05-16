@@ -12,7 +12,7 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
 <link rel="canonical" href="https://manosmagnus.github.io/GSoC_19/">
-<!--[if lt IE 9]><script src="assets/js/html5shiv-printshiv.min.js"></script><![endif]-->
+<!--[if lt IE 9]><script src="assets/js/html5shiv-printshiv.min.js"></script><![endif]--><link rel="prefetch" href="posts/build-zap-with-intelij/" type="text/html">
 </head>
 <body>
     <a href="#page-content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -35,6 +35,201 @@
 
     
 <div class="postindex">
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/build-zap-with-intelij/" class="u-url">Build ZAP with InteliJ</a></h1>
+        <div class="metadata">
+            <p class="dateline"><a href="posts/build-zap-with-intelij/" rel="bookmark"><i class="fa fa-clock"></i> <time class="published dt-published" datetime="2019-05-16T15:23:12+03:00" title="2019-05-16 15:23">2019-05-16 15:23</time></a></p>
+            <p class="byline author vcard"> <i class="fa fa-user"></i> <span class="byline-name fn" itemprop="author">
+                Manos Kirtas
+            </span></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">Build zaproxy (ant-build)</h2>
+<div class="outline-text-2" id="text-1">
+<ol class="org-ol">
+<li>Start InteliJ and then `Import new project` 
+
+<div class="figure">
+<p><img src="images/build-zap-extension-with-intelij/step_1.png" alt="step_1.png" align="center"></p>
+</div>
+</li>
+
+<li>Choose &lt;dir&gt;/zaproxy
+
+
+<div class="figure">
+<p><img src="images/build-zap-extension-with-intelij/step_2.png" alt="step_2.png"></p>
+</div>
+</li>
+
+<li>Then choose `Create project from existing sources`
+
+<div class="figure">
+<p><img src="images/build-zap-extension-with-intelij/step_3.png" alt="step_3.png" width="600 height 400"></p>
+</div>
+</li>
+
+<li>The `Project location:` project location should be `&lt;dir&gt;/zaproxy`
+
+
+<div class="figure">
+<p><img src="images/build-zap-extension-with-intelij/step_4.png" alt="step_4.png" width="600 height 400"></p>
+</div>
+</li>
+
+<li>At the following windows select `Mark All` and hit `Next`
+</li>
+
+<li>`Next`
+
+<div class="figure">
+<p><img src="images/build-zap-extension-with-intelij/step_7.png" alt="step_7.png" width="600 height 400"></p>
+</div>
+</li>
+
+<li>`Next`
+
+<div class="figure">
+<p><img src="images/build-zap-extension-with-intelij/step_8.png" alt="step_8.png" width="600 height 400"></p>
+</div>
+</li>
+
+<li>Finally, hit `Finish`
+
+<div class="figure">
+<p><img src="images/build-zap-extension-with-intelij/step_9.png" alt="step_9.png" width="600 height 400"></p>
+</div>
+</li>
+
+<li>After all you should came up with something like this:
+
+
+<div class="figure">
+<p><img src="images/build-zap-extension-with-intelij/step_10.png" alt="step_10.png"></p>
+</div>
+</li>
+
+<li>In turn, Ant build.xml should be added using `Ant build` side panel
+
+<div class="figure">
+<p><img src="images/build-zap-extension-with-intelij/step_11.png" alt="step_11.png" width="600 height 400"></p>
+</div>
+</li>
+
+<li>Configure run and debug 
+
+<div class="figure">
+<p><img src="images/build-zap-extension-with-intelij/step_12.png" alt="step_12.png" width="600 height 400"></p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">Build zap-extensions (gradle-build)</h2>
+<div class="outline-text-2" id="text-2">
+<ol class="org-ol">
+<li>Build zap
+</li>
+<li>Go to `File` -&gt; `Project Structure' -&gt; 'Modules` and hit `+` symbol
+
+<div class="figure">
+<p><img src="images/build-zap-extension-with-intelij/step_ext_2.png" alt="step_ext_2.png" width="600 height 400"></p>
+</div>
+</li>
+<li>Hit `Import module` and select `&lt;dir&gt;/zap-extensions`
+</li>
+<li>Then select `Import module from external model:` and use `gradle`
+
+<div class="figure">
+<p><img src="images/build-zap-extension-with-intelij/step_ext_4.png" alt="step_ext_4.png" width="600 height 400"></p>
+</div>
+</li>
+
+<li>In turn, select `Use default module wrapper (recommended)` and hit `Finish` 
+
+<div class="figure">
+<p><img src="images/build-zap-extension-with-intelij/step_ext_5.png" alt="step_ext_5.png" width="600 height 400"></p>
+</div>
+</li>
+
+<li>Hit `OK` at `Project Structure` window. That may be take several minutes.
+</li>
+
+<li>After all should you be able to access `Gradle` side bar
+
+
+<div class="figure">
+<p><img src="images/build-zap-extension-with-intelij/step_ext_7.png" alt="step_ext_7.png"></p>
+</div>
+</li>
+
+<li>
+<b><b>NOTE:</b></b> In order to run/debug ZAP correctly, the `Use classpath of module:` at `Run/Debug Configurations` should always be selected at `zaproxy` module.
+
+<div class="figure">
+<p><img src="images/build-zap-extension-with-intelij/step_ext_8.png" alt="step_ext_8.png" width="600 height 400"></p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/gsoc19-accepted/" class="u-url">GSoC'19: Accepted!</a></h1>
+        <div class="metadata">
+            <p class="dateline"><a href="posts/gsoc19-accepted/" rel="bookmark"><i class="fa fa-clock"></i> <time class="published dt-published" datetime="2019-05-07T16:32:12+03:00" title="2019-05-07 16:32">2019-05-07 16:32</time></a></p>
+            <p class="byline author vcard"> <i class="fa fa-user"></i> <span class="byline-name fn" itemprop="author">
+                Manos Kirtas
+            </span></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div class="figure">
+<p><img src="https://3.bp.blogspot.com/-qbcVeQlCj54/W-xm_OlMg5I/AAAAAAAABu8/KCnTxayUm1Y3TlpcQFQbsNK5nA6K5M6pgCLcBGAs/s200/GSoC+-+Vertical+Narrow+-+Gray+Text+-+White+BG.png" alt="GSoC+-+Vertical+Narrow+-+Gray+Text+-+White+BG.png"></p>
+</div>
+
+<p>
+For the next few days it's community bonding period. I  will take advantage of
+this time to let the community know about my project and it's goals, as well as
+get a head start on the coding period. 
+</p>
+
+<p>
+Firstly, I invited in the weekly-meetings of ZAP's core team. As my mentors
+inform me the team is working on ZAP 2.8.0 release which is going to be released
+at the following… &lt;period-of-time&gt;. 
+</p>
+
+<p>
+In reference to my project, until Friday I will publish a new post about
+WebSocket Passive Scanning. I am planning for the next few days sum up the work
+I have done before and organize my workflow and timeline. First of all, I am
+going to focus on <a href="https://github.com/zaproxy/zap-extensions/pull/1718">PR#1718</a> which, from my prospective, is close to get merged.
+</p>
+
+<p>
+<b>Happy Coding, Happy (GSoC) Summer!</b>
+</p>
+
+<p>
+<i>PS: This blog is created with Nikola by using emacs-mode. For more details Fabien Dubosson have written a great <a href="https://streakycobra.github.io/posts/blogging-in-org-mode-with-nikola/">guide</a> to integrate Nikola and emacs-mode with github pages</i>
+</p>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/access-to-gsoc2018s-blog/" class="u-url">Access to GSoC'2018's blog</a></h1>
+        <div class="metadata">
+            <p class="dateline"><a href="posts/access-to-gsoc2018s-blog/" rel="bookmark"><i class="fa fa-clock"></i> <time class="published dt-published" datetime="2019-05-07T16:06:58+03:00" title="2019-05-07 16:06">2019-05-07 16:06</time></a></p>
+            <p class="byline author vcard"> <i class="fa fa-user"></i> <span class="byline-name fn" itemprop="author">
+                Manos Kirtas
+            </span></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <p>
+In my <a href="https://manosmagnus.github.io/posts/GSoC_18/">GSoC'18 blog</a> you can find my previous proposal about WebSocket Active
+Scanning. There are also information related with ZAP functionality and problems
+which are faced.
+</p>
+    </div>
+    </article>
 </div>
 
 
