@@ -1,7 +1,4 @@
-*.org
 *.txt
-!/data/org/*.org
-!/data/websocket_examples/WebSocketExamples.org
 *.py[cod]
 GSoC_19/__pycache__
 GSoC_19/cache
