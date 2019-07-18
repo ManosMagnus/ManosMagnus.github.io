@@ -242,14 +242,17 @@
   enabled and they are located under =<ZAP Home>/scripts/scripts/websocketpassive=
   directory. If you are not satisfied with your changes, you can always revert
   to initial default scripts from the templates. 
-
-  Template scripts are released quality scripts, as default one, which is
-  used either for revert your changes or they can be used as base
-  scripts. They are located under =<ZAP Home>/scripts/templates/websocketpassive=
+  
+  Template scripts can be found useful in two cases. In first case, you can use
+  them as base scripts, meaning that you can develop your rule by stacking your
+  features over the existing ones. In the other case, you can use them as back up
+  scripts, for instance if you are not satisfied with your changes, you can
+  revert them using the template script. They are located under =<ZAP
+  Home>/scripts/templates/websocketpassive= 
   directory in OS. Template scripts classified to those which are implement a
-  scanning rule and those which are just templates, meaning that they are not
-  perform any passive scan rule. If you are interested in writing a passive scan
-  rule which is not related with the existing ones use those empty templates. To
+  passive scan rule and those which are just templates, meaning that they are not
+  implement any passive scan rule. If you are interested in writing a passive scan
+  rule which is not related with the existing ones, use those empty templates. To
   identify them they are using keyword =Template=.
 
   Full list of default WebSocket Passive scan scripts and explanation about them
