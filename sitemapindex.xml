@@ -27,22 +27,38 @@
  </sitemap>
  <sitemap>
   <loc>https://manosmagnus.github.io/GSoC_19/categories/guides.xml</loc>
-  <lastmod>2019-05-16T13:54:00Z</lastmod>
+  <lastmod>2019-07-17T15:11:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/passive.xml</loc>
+  <lastmod>2019-07-19T12:38:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/scan.xml</loc>
+  <lastmod>2019-07-19T12:38:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/tutorial.xml</loc>
+  <lastmod>2019-07-19T12:38:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://manosmagnus.github.io/GSoC_19/categories/websockets.xml</loc>
-  <lastmod>2019-05-16T13:54:00Z</lastmod>
+  <lastmod>2019-07-19T14:42:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://manosmagnus.github.io/GSoC_19/categories/zap-extension.xml</loc>
-  <lastmod>2019-05-16T13:54:00Z</lastmod>
+  <lastmod>2019-07-17T15:11:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/zap.xml</loc>
+  <lastmod>2019-07-19T12:38:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://manosmagnus.github.io/GSoC_19/rss.xml</loc>
-  <lastmod>2019-05-16T13:54:00Z</lastmod>
+  <lastmod>2019-07-19T14:42:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://manosmagnus.github.io/GSoC_19/sitemap.xml</loc>
-  <lastmod>2019-05-16T13:54:00Z</lastmod>
+  <lastmod>2019-07-19T14:42:00Z</lastmod>
  </sitemap>
 </sitemapindex>

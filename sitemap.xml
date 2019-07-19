@@ -15,11 +15,11 @@
  </url>
  <url>
   <loc>https://manosmagnus.github.io/GSoC_19/archive.html</loc>
-  <lastmod>2019-05-16T13:54:00Z</lastmod>
+  <lastmod>2019-07-19T14:42:00Z</lastmod>
  </url>
  <url>
   <loc>https://manosmagnus.github.io/GSoC_19/categories/</loc>
-  <lastmod>2019-05-16T13:54:00Z</lastmod>
+  <lastmod>2019-07-11T12:57:00Z</lastmod>
  </url>
  <url>
   <loc>https://manosmagnus.github.io/GSoC_19/categories/cat_general/</loc>
@@ -46,12 +46,28 @@
   <lastmod>2019-05-16T13:54:00Z</lastmod>
  </url>
  <url>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/passive/</loc>
+  <lastmod>2019-07-11T12:57:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/scan/</loc>
+  <lastmod>2019-07-11T12:57:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/tutorial/</loc>
+  <lastmod>2019-07-11T12:57:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://manosmagnus.github.io/GSoC_19/categories/websockets/</loc>
   <lastmod>2019-05-16T13:54:00Z</lastmod>
  </url>
  <url>
   <loc>https://manosmagnus.github.io/GSoC_19/categories/zap-extension/</loc>
   <lastmod>2019-05-16T13:54:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://manosmagnus.github.io/GSoC_19/categories/zap/</loc>
+  <lastmod>2019-07-11T12:57:00Z</lastmod>
  </url>
  <url>
   <loc>https://manosmagnus.github.io/GSoC_19/posts/access-to-gsoc2018s-blog/</loc>
@@ -64,5 +80,13 @@
  <url>
   <loc>https://manosmagnus.github.io/GSoC_19/posts/gsoc19-accepted/</loc>
   <lastmod>2019-05-16T13:54:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://manosmagnus.github.io/GSoC_19/posts/websocket-passive-scan-using-scripts-with-zap/</loc>
+  <lastmod>2019-07-11T12:57:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://manosmagnus.github.io/GSoC_19/posts/websocket-passive-scanning-using-scripts-with-zap/</loc>
+  <lastmod>2019-07-11T12:57:00Z</lastmod>
  </url>
 </urlset>

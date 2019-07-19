@@ -12,7 +12,7 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
 <link rel="canonical" href="https://manosmagnus.github.io/GSoC_19/">
-<!--[if lt IE 9]><script src="assets/js/html5shiv-printshiv.min.js"></script><![endif]--><link rel="prefetch" href="posts/build-zap-with-intelij/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5shiv-printshiv.min.js"></script><![endif]--><link rel="prefetch" href="posts/websocket-passive-scan-using-scripts-with-zap/" type="text/html">
 </head>
 <body>
     <a href="#page-content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -35,14 +35,1179 @@
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/build-zap-with-intelij/" class="u-url">Build ZAP with InteliJ</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/websocket-passive-scan-using-scripts-with-zap/" class="u-url">WebSocket Passive Scan using scripts with ZAP</a></h1>
+        <div class="metadata">
+            <p class="dateline"><a href="posts/websocket-passive-scan-using-scripts-with-zap/" rel="bookmark"><i class="fa fa-clock"></i> <time class="published dt-published" datetime="2019-07-11T14:43:55+03:00" title="2019-07-11 14:43">2019-07-11 14:43</time></a></p>
+            <p class="byline author vcard"> <i class="fa fa-user"></i> <span class="byline-name fn" itemprop="author">
+                Manos Kirtas
+            </span></p>
+        </div>
+    </header><div class="p-summary entry-summary">
+    <div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li>
+<a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-1">Introduction</a>
+<ul>
+<li><a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-1-1">WebSocket Add-on</a></li>
+<li><a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-1-2">WebSocket Passive Scanning</a></li>
+<li><a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-1-3">Alerts</a></li>
+<li><a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-1-4">Script Console Add-on</a></li>
+</ul>
+</li>
+<li>
+<a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-2">WebSocket Passive Scan Scripts</a>
+<ul>
+<li><a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-2-1">Default Scripts</a></li>
+<li>
+<a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-2-2">Change the Default Scripts</a>
+<ul>
+<li><a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-2-2-1">Use case 1: Application Error Scanner</a></li>
+</ul>
+</li>
+<li>
+<a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-2-3">Write your own scripts</a>
+<ul>
+<li><a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-2-3-1">Case 0: Greater Than 10</a></li>
+<li><a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-2-3-2">Case 1: Email Disclosure</a></li>
+<li><a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-2-3-3">Case 2: Base64 Disclosure</a></li>
+<li><a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-2-3-4">Case 3: Username Disclosure</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-3">Tips and Tricks</a></li>
+<li><a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-4">Contribute to ZAP</a></li>
+<li><a href="posts/websocket-passive-scan-using-scripts-with-zap/#sec-5">Acknowledgments</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+In this blog post we are going to demonstrate a brand new feature of OWASP
+Zed Attack Proxy (ZAP). Specifically, we are going to use the WebSocket add-on
+in order to perform Passive Scanning of WebSocket messages. Even if you are not
+familiar with ZAP, this guide will try to be extensive enough to cover the
+basics behind ZAP, and give you the ability to write and use WebSocket passive
+scan rules. On the other hand, if you are already familiar with ZAP, you can 
+skip the introduction section and continue with the <a href="posts/websocket-passive-scan-using-scripts-with-zap/#ws-pscan-scripts">WebSocket Passive Scan Scripts
+section</a>.  
+</p>
+
+<blockquote>
+<p>
+At its core, ZAP is what is known as "man-in-the-middle proxy". It stands
+between the tester's browser and web application so that it can intercept and
+inspect messages sent between browser and the web application.
+</p>
+
+<p>
+<i>From <a href="https://github.com/zaproxy/zaproxy/releases/download/v2.8.0/ZAPGettingStartedGuide-2.8.pdf">Getting Started Guide (pdf)</a>.</i>
+</p>
+</blockquote>
+
+
+<div class="figure">
+<p><img src="images/pscan-tutorial/zap_as_proxy.png" alt="zap_as_proxy.png" align="center" width="400 height 200"></p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1">WebSocket Add-on</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+By default the WebSocket Add-on is installed and it is responsible to intercept
+and inspect WebSocket messages and connections. Other functions like setting
+breakpoints, modify the content if needed, and then forward those messages to
+the destination are also available, however, it is out of the scope for this
+blog post. The WebSocket messages are displayed in a separate tab at the
+bottom of the window. 
+</p>
+
+
+<div class="figure">
+<p><img src="images/pscan-tutorial/websocket_panel_1.png" alt="websocket_panel_1.png" align="center" width="600 height 600"></p>
+<p><span class="figure-number">Figure 2:</span> WebSocket Panel</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2">WebSocket Passive Scanning</h3>
+<div class="outline-text-3" id="text-1-2">
+<blockquote>
+<p>
+The passive scans rules are used to warn the user of potential vulnerability
+that can be detected passively - <span class="underline">they are not meant to send any new WebSocket</span>
+<span class="underline">message or manipulate the messages in any way</span>. They typically run against
+all of the WebSocket messages that flow through ZAP. Passive rules run in
+a separate background thread so that they have as little effect on performance
+as possible. 
+</p>
+
+<p>
+<i>From <a href="https://zaproxy.blogspot.com/2014/04/hacking-zap-3-passive-scan-rules.html">ZAP blog</a>, (modified in order to fit the WebSocket Passive scan case)</i>
+</p>
+</blockquote>
+
+<p>
+At the end, what we want from the WebSocket Passive scan is to check all
+WebSocket message payloads for information which might reveal the
+existence of an issue/vulnerability (e.x. an internal server error).
+</p>
+
+<p>
+<b><b>Hands on Section:</b></b>    
+Open ZAP and configure your browser (<a href="https://github.com/zaproxy/zap-core-help/wiki/HelpStartStart">Getting Started (wiki)</a>). Open
+<a href="http://websocket.org/echo.html">http://websocket.org/echo.html</a> in your configured browser, connect to the
+WebSocket Server and send some messages.
+</p>
+
+<p>
+Let's assume now that somehow (we will see that in a following section) ZAP
+found an issue in your WebSocket traffic, how you can be informed? By Alerts.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3">Alerts</h3>
+<div class="outline-text-3" id="text-1-3">
+<blockquote>
+<p>
+An alert is a potential vulnerability and is associated with a specific
+WebSocket Message. A message can have more than one alert. 
+</p>
+
+<p>
+<i>from <a href="https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsAlerts">ZAP wiki,</a> (modified in order to fit the WebSocket Passive scan case)</i>
+</p>
+</blockquote>
+
+
+<div class="figure">
+<p><img src="images/pscan-tutorial/alert_panel_1.png" alt="alert_panel_1.png" align="center" width="800 height 500"></p>
+<p><span class="figure-number">Figure 3:</span> Alerts Panel</p>
+</div>
+
+<p>
+An Alert is raised by a scanner (we are going to see how in a while) which
+gives it some properties. In the WebSocket Passive scan the properties
+which are essential and displayed in the Alert panel are the following:
+</p>
+
+<ul class="org-ul">
+<li>Name (title): The name of the alert
+</li>
+<li>URL: The URL of the HTTP message which establishes the WebSocket Connection (handshake)
+</li>
+<li>Risk: informs how crucial the alert is
+</li>
+<li>Confidence: how sure that the issue occurs
+</li>
+<li>Parameter: <i>Not needed for now</i>
+</li>
+<li>Attack: <i>Used only in active scanning</i>
+</li>
+<li>Evidence: The evidence of the issue
+</li>
+<li>CWE ID: Common Weakness Enumeration (<a href="https://en.wikipedia.org/wiki/Common_Weakness_Enumeration">wikipedia</a>)
+</li>
+<li>WASC ID: Threat Classification Reference
+</li>
+<li>Source: <code>Passive</code> as it performs passive scan and the id of the scanner
+</li>
+<li>Description: A brief description of the alert
+</li>
+<li>Other info: The WebSocket Message payload
+</li>
+<li>Solution: Some possible solutions
+</li>
+<li>Reference: External reference (eg links) for further reading 
+</li>
+</ul>
+<p>
+<b><b>Hands on Section:</b></b>    
+Let's trigger some Alerts. Firstly, you have been already connected to the
+WebSocket which is in the <a href="http://websocket.org/echo.html">http://websocket.org/echo.html</a>.
+</p>
+
+<p>
+Case 1: Write an email address (like mail@zaproxy.com) and send it. See what alert
+was raised. 
+</p>
+
+<p>
+Case 2: Encode "Hello World" with Base64 (SGVsbG8gV29ybGQ=) and send it. 
+See what alert was raised. 
+</p>
+
+<p>
+Case 3: Type some valid XML with the following comment in it : 
+&lt;!– TODO: fix this issue –&gt;. See what alert was raised.
+</p>
+
+<div class="highlight"><pre><span></span>&lt;layer1&gt;
+  &lt;!--This is a comment --&gt;
+  &lt;layer2&gt;
+    &lt;!-- TODO: fix this issue --&gt;
+    &lt;form&gt; ........ &lt;/form&gt;
+  &lt;/layer2&gt;
+&lt;/layer1&gt;
+</pre></div>
+
+<p>
+Case 4: Add a user in the 'Context'(<a href="https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsAuthentication#formBased">wiki</a>). Encode the Username with MD5 hash and send
+it. See what alert was raised. 
+</p>
+
+<p>
+Finally: Go to Alerts Panel hit the broom icon to remove all Alerts.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4">Script Console Add-on</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+And now one of my favorite features of ZAP, the Script Console add-on.
+</p>
+
+<blockquote>
+<p>
+The Script Console add-on allows you to run scripts that can be embedded within ZAP and can access internal ZAP data structures. It supports any scripting language that supports JSR 223 (<a href="http://www.jcp.org/en/jsr/detail?id=223">http://www.jcp.org/en/jsr/detail?id=223</a>) , including:
+</p>
+
+<p>
+ECMAScript / Javascript (using Nashorn engine, included by default)
+</p>
+
+<p>
+Zest <a href="https://developer.mozilla.org/en-US/docs/zest">https://developer.mozilla.org/en-US/docs/zest</a> (included by default)
+</p>
+
+<p>
+Groovy <a href="http://groovy-lang.org/">http://groovy-lang.org/</a>
+</p>
+
+<p>
+Python <a href="http://www.jython.org">http://www.jython.org</a>
+</p>
+
+<p>
+Ruby - <a href="http://jruby.org/">http://jruby.org/</a>
+</p>
+
+<p>
+and many more…
+</p>
+
+<p>
+<i>From ZAP's <a href="https://github.com/zaproxy/zap-core-help/wiki/HelpAddonsScriptsScripts">wiki</a></i>
+</p>
+</blockquote>
+
+<p>
+Referring on scripts console add-on we are referring to the ability that the
+user has to write scripts which implement various behaviors like scans, fuzzing etc.
+Scripts Console add-on has a panel where the scripts are displayed. The panel
+has a tree structure, which has two branches, the <code>Scripts</code> branch and
+<code>Templates</code>. In both branches there are some folders which are referring on
+different kinds of scripts. As you can see those folders in both branches have
+the same names.
+</p>
+
+
+<div class="figure">
+<p><img src="images/pscan-tutorial/scripts_tree.png" alt="scripts_tree.png" align="center" width="300 height 800"></p>
+<p><span class="figure-number">Figure 4:</span> Scripts Tree Sidebar</p>
+</div>
+
+<p>
+ZAP defines <code>Templates</code> in order to be used as base scripts. As we will see
+in a while every kind of scripts should perform a specific operation. For
+instance, a WebSocket Passive Scanning script defines a set of rules that
+WebSocket messages should adhere to. In addition, <code>Templates</code> are not
+runnable, enablable or directly editable, they are used only as templates. In
+order to use a template, right click on it and then hit <code>New script...</code>. 
+</p>
+
+<p>
+<b><b>Hands on Section:</b></b>
+Go to the template script <code>Base64 Disclosure.js</code>, right click on it, and hit
+<code>New Script...</code> rename  <code>Script Name</code> to <code>MyBase64 Disclosure.js</code> and hit
+save. See what happened. 
+</p>
+
+<p>
+<code>Scripts</code>, on the other hand, are the actual scripts which are run by ZAP.
+There are a good many possibilities in which we can use scripts,
+however, in this guide we are interested in WebSocket Passive Scanning.
+Passive Scripts have two states, enabled and disabled. When a script is
+disabled that means that it is not running at all. Other options like
+<code>duplicate</code> script or <code>remove</code> script are available by right clicking on
+them. <b><b>You should always remember that Right Click in ZAP is your best
+friend.</b></b> If a script failed (e.x. syntax error), exceptions messages will be
+displayed in Scripts Console and the script will be automatically disabled.
+By default, the folders under <code>Scripts</code> are empty, except from the <code>WebSocket
+   Passive Rules</code>. If you want to explore more the scripting techniques and add
+some rules in ZAP, I totally recommend to install <code>Community Scripts</code> from
+<code>marketplace</code>.  
+</p>
+
+<p>
+<b><b>Hands on Section:</b></b>
+Go to the script that was created before. If it is not disabled, then disable it
+using right click. Navigate over the code and find the following line: 
+</p>
+
+<div class="highlight"><pre><span></span><span class="nx">PRINT_RESULTS</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+</pre></div>
+
+<p>
+make it <code>true</code>, enable and save the script. 
+</p>
+
+<p>
+Passive scan scripts are running against all messages, as a result we do not have to
+run them explicitly. So the only thing we have to do is to enable them, and when
+some messages will be transmitted via the WebSocket connections the scripts will
+be triggered.
+</p>
+
+<p>
+<b><b>Hands on Section:</b></b> Connect to <a href="http://websocket.org/echo.html">http://websocket.org/echo.html</a> websocket
+server as before, encode "Hello World" with a Base64 encoder
+(SGVsbG8gV29ybGQ=) and send it. See what was printed in the scripts console.
+</p>
+
+<p>
+Then Disable your script, and find the following lines: 
+</p>
+
+<div class="highlight"><pre><span></span><span class="nx">helper</span><span class="p">.</span><span class="nx">newAlert</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">setRiskConfidence</span><span class="p">(</span><span class="nx">RISK_INFO</span><span class="p">,</span> <span class="nx">CONFIDENCE_MEDIUM</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">setName</span><span class="p">(</span><span class="s2">"Base64 Disclosure in WebSocket message (script)"</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">setDescription</span><span class="p">(</span><span class="s2">"A Base64-encoded string has been found in the websocket incoming message. Base64-encoded data may contain sensitive "</span> <span class="o">+</span>
+    <span class="s2">"information such as usernames, passwords or cookies which should be further inspected. Decoded evidence: "</span>
+    <span class="o">+</span> <span class="nx">decodedEvidence</span> <span class="o">+</span> <span class="s2">"."</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">setSolution</span><span class="p">(</span><span class="s2">"Base64-encoding should not be used to store or send sensitive information."</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">setEvidence</span><span class="p">(</span><span class="nx">evidence</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">raise</span><span class="p">();</span>
+</pre></div>
+<p>
+and change the name of the alert. Re-enable the script. Send the Encoded
+"Hello World" once again and then go to the <code>Alert Panel</code> and see what happened.
+Finally, remove the script using right click.
+</p>
+
+
+<div class="figure">
+<p><img src="images/pscan-tutorial/mybase64_alert.png" alt="mybase64_alert.png" align="center" width="900 height 400"></p>
+<p><span class="figure-number">Figure 5:</span> Alert which is raised by MyBase64 script</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">WebSocket Passive Scan Scripts</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<a id="ws-pscan-scripts" name="ws-pscan-scripts"></a>
+</p>
+
+<p>
+By default ZAP comes with various WebSocket Passive Scan Scripts. Default
+Scripts are scanning passively the WebSocket Messages in order to disclosure
+information which might be useful for the user while testing a Web
+Application. As we saw before, scripts are classified into two categories,
+<code>Templates</code> and <code>Scripts</code>. Default scripts are located in both categories.
+Those which are in <code>Scripts</code> category are ones which actually run against
+the WebSocket Messages. You can modify them any 
+time you want or even remove them. By default those passive scan scripts are
+enabled and they are located under <code>&lt;ZAP Home&gt;/scripts/scripts/websocketpassive</code>
+directory. If you are not satisfied with your changes, you can always revert
+to initial default scripts from the templates. 
+</p>
+
+<p>
+Template scripts can be found useful in two cases. In first case, you can use
+them as base scripts, meaning that you can develop your rule by stacking your
+features over the existing ones. In the other case, you can use them as back up
+scripts, for instance if you are not satisfied with your changes, you can
+revert them using the template script. They are located under <code>&lt;ZAP
+  Home&gt;/scripts/templates/websocketpassive</code> 
+directory in OS. Template scripts classified to those which are implement a
+passive scan rule and those which are just templates, meaning that they are not
+implement any passive scan rule. If you are interested in writing a passive scan
+rule which is not related with the existing ones, use those empty templates. To
+identify them they are using keyword <code>Template</code>.
+</p>
+
+<p>
+Full list of default WebSocket Passive scan scripts and explanation about them
+can be found in ZAP help (<code>F1 -&gt; Add Ons -&gt; WebSockets -&gt; Passive Scan
+  Rules</code>). 
+</p>
+</div>
+
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1">Default Scripts</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>
+<b><b>Base64 Disclosure:</b></b> 
+This script analyzes incoming WebSocket message payload for Base64 strings.
+The encoded information may include sensitive data which may not
+specifically meant for end user consumption. The regular expression which
+is used to identify the Base64 string is based on padding characters. As
+result False Negative may occur if the encoded string has length N bits
+where (N)mod6 = 0. On the other hand, False Positives may occur if the
+input text contains strings ending with '='. 
+</li>
+
+<li>
+<b><b>Information Disclosure: Application Errors:</b></b>
+This script analyzes incoming WebSocket message payload for Base64 strings.
+The encoded information may include sensitive data which may not
+specifically meant for end user consumption. The regular expression which
+is used to identify the Base64 string is based on padding characters. As
+result False Negative may occur if the encoded string has length N bits
+where (N)mod6 = 0. On the other hand, False Positives may occur if the
+input text contains strings ending with '='. 
+</li>
+
+<li>
+<b><b>Information Disclosure: Credit Card Number:</b></b>
+This script scans for the presence of Personally Information Identifiable
+in incoming WebSocket message paylaod. More specifically, it passively
+scans payload for credit card numbers. The available scans are for the
+following credit card types: {American Express, Diners Club, Discover, Jcb,
+Mestro, Master Card, Visa}. 
+</li>
+
+<li>
+<b><b>Information Disclosure: Debug Errors:</b></b> 
+This script checks the incoming WebSocket message payload for known Debug
+Error message fragments. Access to such details may provide a malicious
+individual with means by which to further abuse the web site. They may also
+leak data not specifically meant for end user consumption. 
+</li>
+
+<li>
+<b><b>Information Disclosure: Email address:</b></b>
+This script scans incoming WebSocket messages for email addresses. Email
+addresses may be not specifically meant for end user consumption. 
+</li>
+
+<li>
+<b><b>Information Disclosure: Suspicious XML Comments:</b></b>
+This script checks incoming WebSocket messages payloads, which are XML
+formatted, for suspicious comments. The comments it is searching for are
+relevant to components with which an attacker can extract useful
+information. Comments like FIXME, BUG, etc might be helpful for further
+attacks targeting the weaknesses of the web application.
+</li>
+
+<li>
+<b><b>Private Address Disclosure:</b></b>
+Checks incoming WebSocket message payload for inclusion of RFC 1918 IPv4
+addresses as well as Amazon EC2 private hostnames (for example, ip-10-0-56-78).
+This information can give an attacker useful information about the IP address
+scheme of the internal network, and might be helpful for further attacks
+targeting internal systems. This passive scanner may generate false positives in
+the case of larger dotted numeric strings, such as vp09.02.51.10.01.09.16, where
+the latter 4 octets appear to be a RFC 1918 IPv4 address. After review an
+analyst can mark such alerts as False Positives in ZAP.  
+</li>
+
+<li>
+<b><b>Username Disclosure:</b></b>   
+Checks incoming WebSocket message payload for usernames. This script can find
+usernames which are hashed with the following methods: {MD2, MD5, SHA256,
+SHA384, SHA512}. The usernames have to be defined in any context before. In
+order to a add user in a Context follow the steps below: 
+
+<ol class="org-ol">
+<li>Include the handshake request in `Context`
+</li>
+<li>Set the target user in `Session Context`
+</li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2">Change the Default Scripts</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+What's great about scripts is the fact that's extremely easy to
+configure them according to your own needs. All WebSocket Passive scans are
+implemented with scripts. Additionally, you can easily reproduce an issue
+only by sharing and loading the same script.
+</p>
+</div>
+
+<div id="outline-container-sec-2-2-1" class="outline-4">
+<h4 id="sec-2-2-1">Use case 1: Application Error Scanner</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+<i>(Based on <a href="https://github.com/zaproxy/zap-extensions/blob/master/addOns/websocket/src/main/zapHomeFiles/scripts/templates/websocketpassive/Application%2520Error%2520Scanner.js">Application Error Scanner script)</a></i>
+</p>
+
+<p>
+<b><b>Use case:</b></b> You need to examine a Web Application about errors which might
+  be transmitted over the WebSocket Connection. Let's say that the Default
+  Script supports only MySQL Errors (this is not true) and you want to add
+  rules for Microsoft DB as well. 
+</p>
+
+<p>
+Let's assume that the default script is the following one:
+</p>
+
+<div class="highlight"><pre><span></span><span class="nx">OPCODE_TEXT</span> <span class="o">=</span> <span class="mh">0x1</span><span class="p">;</span>
+<span class="nx">RISK_MEDIUM</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="nx">CONFIDENCE_MEDIUM</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">dbErrors</span> <span class="o">=</span> <span class="p">[</span><span class="sr">/supplied argument is not a valid MySQL result/igm</span><span class="p">,</span>
+			  <span class="sr">/Invalid parameter type/igm</span><span class="p">,</span>
+			  <span class="sr">/You have an error in your SQL syntax/igm</span><span class="p">,</span>
+			  <span class="sr">/server object error/igm</span>
+			  <span class="p">......................</span>
+			  <span class="p">.....................</span>
+			  <span class="p">];</span>
+
+<span class="kd">function</span> <span class="nx">scan</span><span class="p">(</span><span class="nx">helper</span><span class="p">,</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">!=</span> <span class="nx">OPCODE_TEXT</span> <span class="o">||</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">isOutgoing</span><span class="p">){</span>
+	<span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">message</span> <span class="o">=</span> <span class="nb">String</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">getReadablePayload</span><span class="p">());</span>
+
+    <span class="kd">var</span> <span class="nx">matches</span><span class="p">;</span>
+    <span class="nx">dbErrors</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">pattern</span><span class="p">){</span>
+	<span class="k">if</span><span class="p">((</span><span class="nx">matches</span> <span class="o">=</span> <span class="nx">message</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">pattern</span><span class="p">))</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">){</span>
+	    <span class="nx">matches</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">evidence</span><span class="p">){</span>
+		<span class="nx">raiseAlert</span><span class="p">(</span><span class="nx">helper</span><span class="p">,</span> <span class="nx">evidence</span><span class="p">);</span>
+	    <span class="p">});</span>
+	<span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">raiseAlert</span><span class="p">(</span><span class="nx">helper</span><span class="p">,</span> <span class="nx">evidence</span><span class="p">){</span>
+    <span class="nx">helper</span><span class="p">.</span><span class="nx">newAlert</span><span class="p">()</span>
+	<span class="p">.</span><span class="nx">setRiskConfidence</span><span class="p">(</span><span class="nx">RISK_MEDIUM</span><span class="p">,</span> <span class="nx">CONFIDENCE_MEDIUM</span><span class="p">)</span>
+	<span class="p">.</span><span class="nx">setName</span><span class="p">(</span><span class="s2">"Application Error Disclosure via WebSockets (script)"</span><span class="p">)</span>
+	<span class="p">.</span><span class="nx">setDescription</span><span class="p">(</span><span class="s2">"This payload contains an error/warning message that\</span>
+<span class="s2"> may disclose sensitive information like the location of the file\</span>
+<span class="s2"> that produced the unhandled exception. This information can be used\</span>
+<span class="s2"> to launch further attacks against the web application."</span><span class="p">)</span>
+	<span class="p">.</span><span class="nx">setSolution</span><span class="p">(</span><span class="s2">"Review the error payloads which are piped directly to WebSockets.\</span>
+<span class="s2"> Handle the related exceptions.\</span>
+<span class="s2"> Consider implementing a mechanism to provide a unique\</span>
+<span class="s2"> error reference/identifier to the client (browser) while logging the\</span>
+<span class="s2"> details on the server side and not exposing them to the user."</span><span class="p">)</span>
+	<span class="p">.</span><span class="nx">setEvidence</span><span class="p">(</span><span class="nx">evidence</span><span class="p">)</span>
+	<span class="p">.</span><span class="nx">setCweId</span><span class="p">(</span><span class="mi">209</span><span class="p">)</span> <span class="c1">// Information Exposure Through an Error Message</span>
+	<span class="p">.</span><span class="nx">setWascId</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span> <span class="c1">// Information Leakage</span>
+	<span class="p">.</span><span class="nx">raise</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">getName</span><span class="p">(){</span>
+    <span class="k">return</span> <span class="s2">"Application Error Disclosure script"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">getId</span><span class="p">(){</span>
+    <span class="k">return</span> <span class="mi">110001</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>
+How easily can you extend this script? Just by adding a few lines:
+</p>
+
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">microsoftDbErrors</span> <span class="o">=</span> <span class="p">[</span><span class="sr">/Microsoft OLE DB Provider for ODBC Drivers/igm</span><span class="p">,</span>
+				     <span class="sr">/Microsoft OLE DB Provider for SQL Server/igm</span><span class="p">,</span>
+				     <span class="sr">/ODBC Microsoft Access Driver/igm</span><span class="p">,</span>
+				     <span class="sr">/ODBC SQL Server Driver/igm</span><span class="p">];</span>
+
+
+<span class="kd">var</span> <span class="nx">mySqlDbErrors</span> <span class="o">=</span> <span class="p">[</span><span class="sr">/supplied argument is not a valid MySQL result/igm</span><span class="p">,</span>
+		    <span class="sr">/Invalid parameter type/igm</span><span class="p">,</span>
+		    <span class="sr">/You have an error in your SQL syntax/igm</span><span class="p">,</span>
+		    <span class="sr">/server object error/igm</span>
+		    <span class="p">......................</span>
+		    <span class="p">.....................</span>
+		    <span class="p">];</span>
+<span class="kd">var</span> <span class="nx">dbErrors</span> <span class="o">=</span> <span class="nx">microsoftDbErrors</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">mySqlDbErrors</span><span class="p">);</span>
+</pre></div>
+
+<p>
+This is just a demonstration how easily you can modify some of the
+scripts. The actual script contains more Error messages for more cases. 
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3">Write your own scripts</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+What's awesome in ZAP is the ability easily write your own rules. In this section
+we are going to write 4 different rules, from a dummy one to more "sophisticated"
+ones. In this guide I am using JavaScript but the same procedure would be
+possible using Jython with only slightly difference in syntax.      
+</p>
+
+<p>
+Actually, scripts implement an interface which is used internally by ZAP.
+WebSocket Passive Scanning uses the <a href="https://github.com/zaproxy/zap-extensions/blob/master/addOns/websocket/src/main/java/org/zaproxy/zap/extension/websocket/pscan/scripts/WebSocketPassiveScript.java">WebSocketPassiveScript</a> interface.
+</p>
+
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">WebSocketPassiveScript</span> <span class="o">{</span>
+
+    <span class="kt">void</span> <span class="nf">scan</span><span class="o">(</span><span class="n">WebSocketScanHelper</span> <span class="n">helper</span><span class="o">,</span> <span class="n">WebSocketMessageDTO</span> <span class="n">msg</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ScriptException</span><span class="o">;</span>
+
+    <span class="k">default</span> <span class="kt">int</span> <span class="nf">getId</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">ScriptsWebSocketPassiveScanner</span><span class="o">.</span><span class="na">PLUGIN_ID</span><span class="o">;</span>  <span class="o">}</span>
+
+    <span class="k">default</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">ScriptsWebSocketPassiveScanner</span><span class="o">.</span><span class="na">PLUGIN_NAME</span><span class="o">;</span> <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>
+In your script you have to implement <code>scan(helper,msg)</code> and optionally
+<code>getId()</code> and <code>getName()</code>. Those methods are called every time a WebSocket
+Message is transmitted over the WebSocket protocol, either is <code>outgoing</code>
+(client -&gt; server) or <code>incoming</code> (server -&gt; client). 
+</p>
+
+<ul class="org-ul">
+<li>
+<code>scan(helper,msg)</code>:
+Here is where you should implement your scanning rule by examining the
+<code>msg</code> and raising alerts using <code>helper</code>
+<ul class="org-ul">
+<li>
+<code>msg</code>:
+Is<a href="https://github.com/zaproxy/zap-extensions/blob/master/addOns/websocket/src/main/java/org/zaproxy/zap/extension/websocket/WebSocketMessageDTO.java"> WebSocketMessageDTO</a> instance which represent a WebSocket Message. You
+should examine those instances using their functions which is presented in
+a Template (presented in a while as well). 
+</li>
+<li>
+<code>helper</code> the <a href="https://github.com/zaproxy/zap-extensions/blob/master/addOns/websocket/src/main/java/org/zaproxy/zap/extension/websocket/pscan/WebSocketScanHelper.java">WebSockeScanHelper</a> interface provides the <code>newAlert()</code>
+       method in order to raise the appropriate alerts.
+<ul class="org-ul">
+<li>
+<code>helper.newAlert()</code> -&gt; Returns an <a href="https://github.com/zaproxy/zap-extensions/blob/master/addOns/websocket/src/main/java/org/zaproxy/zap/extension/websocket/alerts/WebSocketAlertRaiser.java">WebSocketAlertRaiser</a> instance which
+is used for building and raising alerts. You can find some useful
+functions and explanation about them in the Template script. 
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<i>(Optional)</i> <code>getId()</code>:
+The ID of the passive rule, it is used on Alerts. Scanning rules are
+documented in <a href="https://github.com/zaproxy/zaproxy/blob/develop/docs/scanners.md">scanners.md</a> with their ID. 
+</li>
+<li>
+<i>(Optional)</i> <code>getName()</code>
+     The name of the passive rule.    
+</li>
+</ul>
+</div>
+
+<div id="outline-container-sec-2-3-1" class="outline-4">
+<h4 id="sec-2-3-1">Case 0: Greater Than 10</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<p>
+<b><b>Use case:</b></b> Let's assume that you are interested in writing a rule in
+order to be informed when an outgoing WebSocket message payload, with text
+opcode, has length greater that 10.
+</p>
+
+<p>
+First of all, we have to create a new script using the Template. In this
+guide we are going to use only JavaScript rules, however, the procedure is
+the same for other available scripting languages as well. 
+</p>
+
+<p>
+<b><b>Hands on Section:</b></b> Create a new template from <code>Passive WebSocket Scan
+    Template.js</code>, name it <code>GreaterThan10.js</code> and hit save. 
+</p>
+
+<p>
+Let's take a look at the template script. The first few lines are constants which
+might be useful in your scripts.
+</p>
+
+<div class="highlight"><pre><span></span><span class="nx">OPCODE_CONTINUATION</span> <span class="o">=</span> <span class="mh">0x0</span><span class="p">;</span>
+<span class="nx">OPCODE_TEXT</span> <span class="o">=</span> <span class="mh">0x1</span><span class="p">;</span>
+<span class="nx">OPCODE_BINARY</span> <span class="o">=</span> <span class="mh">0x2</span><span class="p">;</span>
+<span class="nx">OPCODE_CLOSE</span> <span class="o">=</span> <span class="mh">0x8</span><span class="p">;</span>
+<span class="nx">OPCODE_PING</span> <span class="o">=</span> <span class="mh">0x9</span><span class="p">;</span>
+<span class="nx">OPCODE_PONG</span> <span class="o">=</span> <span class="mh">0xA</span><span class="p">;</span>
+
+<span class="nx">RISK_INFO</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nx">RISK_LOW</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="nx">RISK_MEDIUM</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="nx">RISK_HIGH</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+<span class="nx">CONFIDENCE_LOW</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="nx">CONFIDENCE_MEDIUM</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="nx">CONFIDENCE_HIGH</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+</pre></div>
+
+<p>
+<b><b>Hands on Section:</b></b> Keep only the constants which are useful for our case (e.g.
+  <code>OPCODE_TEXT</code>, <code>RISK_INFO</code>, <code>CONFIDENCE_HIGH</code>). 
+</p>
+
+<p>
+Template script also contains help content with functions and variables
+which might be useful to you.
+</p>
+
+<div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> * This function scans passively WebSocket messages. The scan function will be called for</span>
+<span class="cm"> * messages via ZAP.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param helper - the WebSocketPassiveHelper interface provides the newAlert() method in order</span>
+<span class="cm"> *                 to raise the appropriate alerts</span>
+<span class="cm"> *</span>
+<span class="cm"> * Some useful function(s) about  WebSocketPassiveHelper:</span>
+<span class="cm"> * helper.newAlert() -&gt; Returns an WebSocketAlertRaiser instance which is used</span>
+<span class="cm"> *                      for building and raising alerts.</span>
+
+<span class="cm"> * * Some useful functions about WebSocketAlertRaiser:</span>
+<span class="cm"> * * alertRaiser.setRiskConfidence(risk, confidence) -&gt; Sets the Risk and the Confidence of the alert. (by default RISK_INFO, CONFIDENCE_MEDIUM).</span>
+<span class="cm"> * * alertRaiser.setName(name)                       -&gt; Sets the name (by default "").</span>
+<span class="cm"> * * alertRaiser.setDescription(description)         -&gt; Sets a description about potential threat (by default "").</span>
+<span class="cm"> * * alertRaiser.setParam(param)                     -&gt; Sets in which parameter threat is noticed (by default "").</span>
+<span class="cm"> * * alertRaiser.setSolution(solution)               -&gt; Sets a possible solution (by default "").</span>
+<span class="cm"> * * alertRaiser.setReference(reference)             -&gt; Sets extra references (ex. a web link) (by default "").</span>
+<span class="cm"> * * alertRaiser.setEvidence(evidence)               -&gt; Sets what's the evidence of potential thread (by default "").</span>
+<span class="cm"> * * alertRaiser.setCweId(cweId)                    -&gt; Sets the CWE ID of the issue (by default 0)</span>
+<span class="cm"> * * alertRaiser.setWascId(wascId)                   -&gt; Sets the WASC ID of the issue (by default 0)</span>
+<span class="cm"> * * alertRaiser.raise()                             -&gt; Build and Raise the alert (returns the WebSocketAlertWrapper)</span>
+
+<span class="cm"> * @param msg - the Websocket Message being scanned. This is a WebSocketMessageDTO object.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Some useful functions and fields of WebSocketMessageDTO:</span>
+<span class="cm"> * msg.channel        -&gt; Channel of the message (WebSocketChannelDTO)</span>
+<span class="cm"> * msg.id             -&gt; Unique ID of the message (int)</span>
+<span class="cm"> * msg.opcode         -&gt; Opcode of the message (int) (Opcodes defined bellow)</span>
+<span class="cm"> * msg.readableOpcode -&gt; Textual representation of opcode (String)</span>
+<span class="cm"> * msg.isOutgoing     -&gt; Outgoing or incoming message (boolean)</span>
+<span class="cm"> * msg.getReadablePayload() -&gt; Return readable representation of payload</span>
+<span class="cm"> *</span>
+<span class="cm"> * * Some useful functions and fields of WebSocketChannelDTO:</span>
+<span class="cm"> * * channel.id         -&gt; Unique ID of the message (int)</span>
+<span class="cm"> * * channel.host       -&gt; Host of the WebSocket Server (String)</span>
+<span class="cm"> * * channel.port       -&gt; Port where the channel is connected at. Usually at 80 or 443.</span>
+<span class="cm"> * * channel.url        -&gt; URL used in HTTP handshake (String).</span>
+<span class="cm"> */</span>
+<span class="kd">function</span> <span class="nx">scan</span><span class="p">(</span><span class="nx">helper</span><span class="p">,</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ............</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>
+It's quite common in passive scan rules to check first if the message has
+the properties we want. 
+</p>
+
+<p>
+<b><b>Hands on Section:</b></b> Remove the default code in <code>scan(helper, msg)</code>, then 
+  check if the message has those properties (be outgoing and has text
+  opcode) and keep them for examination else return without doing anything. 
+</p>
+
+<p>
+When it is required to examine the payload we have to extract the payload of
+the WebSocket message. 
+</p>
+
+<p>
+<b><b>Hands on Section:</b></b> Get the payload and check if it has more than 10 characters.
+</p>
+
+<p>
+If the payload  has  <code>payload.length &gt; 10</code> then we have to
+raise an alert in order to inform ourselves that a message payload violate
+our rule. Raise an alert by using <code>helper.newAlert()</code> and build the alert
+accordingly. 
+</p>
+
+<p>
+<b><b>Hands on Section:</b></b> Raise an alert with a Name, Risk &amp; Confidence, evidence
+  and description. <b><b>Save and Enable the script</b></b>
+</p>
+
+<div class="highlight"><pre><span></span><span class="nx">OPCODE_TEXT</span> <span class="o">=</span> <span class="mh">0x1</span><span class="p">;</span>
+<span class="nx">RISK_INFO</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nx">CONFIDENCE_HIGH</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">scan</span><span class="p">(</span><span class="nx">helper</span><span class="p">,</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">!=</span> <span class="nx">OPCODE_TEXT</span> <span class="o">||</span> <span class="o">!</span><span class="nx">msg</span><span class="p">.</span><span class="nx">isOutgoing</span><span class="p">){</span>
+	<span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nx">payload</span> <span class="o">=</span> <span class="nb">String</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">getReadablePayload</span><span class="p">());</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="nx">payload</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">){</span>
+	<span class="nx">helper</span><span class="p">.</span><span class="nx">newAlert</span><span class="p">()</span>
+	    <span class="p">.</span><span class="nx">setRiskConfidence</span><span class="p">(</span><span class="nx">RISK_INFO</span><span class="p">,</span> <span class="nx">CONFIDENCE_HIGH</span><span class="p">)</span>
+	    <span class="p">.</span><span class="nx">setName</span><span class="p">(</span><span class="s2">"Greater Than 10 (Script)"</span><span class="p">)</span>
+	    <span class="p">.</span><span class="nx">setDescription</span><span class="p">(</span><span class="s2">"The payload has more than 10 characters"</span><span class="p">)</span>
+	    <span class="p">.</span><span class="nx">setEvidence</span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span>
+	    <span class="p">.</span><span class="nx">raise</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-2" class="outline-4">
+<h4 id="sec-2-3-2">Case 1: Email Disclosure</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<p>
+<i>(Based on <a href="https://github.com/zaproxy/zap-extensions/blob/master/addOns/websocket/src/main/zapHomeFiles/scripts/templates/websocketpassive/Email%2520Disclosure.js">Email Disclosure Script</a>)</i>
+</p>
+
+<p>
+We are using this case because it's common to have Regular Expression
+patterns in rules. In this rule we want a pattern in order to identify email
+addresses in WebSocket messages payloads. This script is
+straightforward as it uses just a regular expression to match the pattern
+with the incoming message payload.
+</p>
+
+<p>
+When we are using patterns the best way is to set the <code>evidence</code>, of the alert,
+to the matching characters in order to be informed about the potential
+issue. In this script we set also Name and ID to the rule.
+</p>
+
+<div class="highlight"><pre><span></span>    <span class="c1">// This script scans incoming WebSocket messages for email address.</span>
+
+    <span class="c1">// * Author: Manos Kirtas (Manos Kirtas)</span>
+    <span class="c1">// * Based on: community-scripts/passive/Find Emails.js</span>
+
+    <span class="nx">OPCODE_TEXT</span> <span class="o">=</span> <span class="mh">0x1</span><span class="p">;</span>
+    <span class="nx">RISK_INFO</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="nx">CONFIDENCE_HIGH</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+    <span class="kd">var</span> <span class="nx">emailRegex</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s2">"([a-z0-9_.+-]+@[a-z0-9]+[a-z0-9-]*\.[a-z0-9-.]*[a-z0-9]{2,})"</span><span class="p">,</span> <span class="s1">'gmi'</span><span class="p">);</span>
+
+    <span class="kd">function</span> <span class="nx">scan</span><span class="p">(</span><span class="nx">helper</span><span class="p">,</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">!=</span> <span class="nx">OPCODE_TEXT</span> <span class="o">||</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">isOutgoing</span><span class="p">){</span>
+	<span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">message</span> <span class="o">=</span> <span class="nb">String</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">getReadablePayload</span><span class="p">());</span>
+    <span class="kd">var</span> <span class="nx">matches</span><span class="p">;</span>
+
+    <span class="k">if</span><span class="p">((</span><span class="nx">matches</span> <span class="o">=</span> <span class="nx">message</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">emailRegex</span><span class="p">))</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">matches</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">evidence</span><span class="p">){</span>
+	    <span class="nx">helper</span><span class="p">.</span><span class="nx">newAlert</span><span class="p">()</span>
+		<span class="p">.</span><span class="nx">setRiskConfidence</span><span class="p">(</span><span class="nx">RISK_INFO</span><span class="p">,</span> <span class="nx">CONFIDENCE_HIGH</span><span class="p">)</span>
+		<span class="p">.</span><span class="nx">setName</span><span class="p">(</span><span class="s2">"Email address found in WebSocket message (script)."</span><span class="p">)</span>
+		<span class="p">.</span><span class="nx">setDescription</span><span class="p">(</span><span class="s2">"An email address was found in a WebSocket Message."</span><span class="p">)</span>
+		<span class="p">.</span><span class="nx">setSolution</span><span class="p">(</span><span class="s2">"Remove emails that are not public."</span><span class="p">)</span>
+		<span class="p">.</span><span class="nx">setEvidence</span><span class="p">(</span><span class="nx">evidence</span><span class="p">)</span>
+		<span class="p">.</span><span class="nx">setCweId</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span> <span class="c1">//Information Exposure</span>
+		<span class="p">.</span><span class="nx">setWascId</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span> <span class="c1">// Information Leakage</span>
+		<span class="p">.</span><span class="nx">raise</span><span class="p">();</span>
+	<span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">getName</span><span class="p">(){</span>
+    <span class="k">return</span> <span class="s2">"Email Disclosure script"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">getId</span><span class="p">(){</span>
+    <span class="k">return</span> <span class="mi">110004</span><span class="p">;</span>
+<span class="p">}</span> 
+</pre></div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-3" class="outline-4">
+<h4 id="sec-2-3-3">Case 2: Base64 Disclosure</h4>
+<div class="outline-text-4" id="text-2-3-3">
+<p>
+<i>(Based on <a href="https://github.com/zaproxy/zap-extensions/blob/master/addOns/websocket/src/main/zapHomeFiles/scripts/templates/websocketpassive/Base64%2520Disclosure.js">Base64 Disclosure Script</a>)</i>
+</p>
+
+<p>
+Base64 disclosure script is based also in pattern matching. However, it's
+interesting because it uses Java build-in libraries. You can easily
+define Java instances and types as follows:
+</p>
+
+<div class="highlight"><pre><span></span><span class="nx">base64Decoder</span> <span class="o">=</span> <span class="nx">java</span><span class="p">.</span><span class="nx">util</span><span class="p">.</span><span class="nx">Base64</span><span class="p">.</span><span class="nx">getDecoder</span><span class="p">();</span>
+<span class="nx">JavaString</span> <span class="o">=</span> <span class="nx">Java</span><span class="p">.</span><span class="nx">type</span><span class="p">(</span><span class="s2">"java.lang.String"</span><span class="p">);</span>
+</pre></div>
+
+<p>
+Those two variables are going to help us to decode Base64 matches and make the
+content human readable. 
+</p>
+
+<div class="highlight"><pre><span></span><span class="c1">// * This script analyzes incoming websocket messages for base64 strings.</span>
+
+<span class="c1">// * Regex Test: https://regex101.com/r/OOElRY/3</span>
+<span class="c1">// ** Forked by: https://regex101.com/library/dS0sM8</span>
+
+<span class="c1">// Author: Manos Kirtas (manolis.kirt@gmail.com)</span>
+
+<span class="c1">// Passive scan rules should not send messages</span>
+<span class="c1">// Right click the script in the Scripts tree and select "enable"  or "disable"</span>
+
+<span class="nx">OPCODE_TEXT</span> <span class="o">=</span> <span class="mh">0x1</span><span class="p">;</span>
+<span class="nx">RISK_INFO</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nx">CONFIDENCE_MEDIUM</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">base64Regex</span> <span class="o">=</span> <span class="sr">/((?:[A-Za-z0-9+\/]{4}\n?)*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=))/gmi</span><span class="p">;</span>
+
+<span class="nx">base64Decoder</span> <span class="o">=</span> <span class="nx">java</span><span class="p">.</span><span class="nx">util</span><span class="p">.</span><span class="nx">Base64</span><span class="p">.</span><span class="nx">getDecoder</span><span class="p">();</span>
+<span class="nx">JavaString</span> <span class="o">=</span> <span class="nx">Java</span><span class="p">.</span><span class="nx">type</span><span class="p">(</span><span class="s2">"java.lang.String"</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">scan</span><span class="p">(</span><span class="nx">helper</span><span class="p">,</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">!=</span> <span class="nx">OPCODE_TEXT</span> <span class="o">||</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">isOutgoing</span><span class="p">){</span>
+	<span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">message</span> <span class="o">=</span> <span class="nb">String</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">getReadablePayload</span><span class="p">());</span>
+    <span class="kd">var</span> <span class="nx">matches</span><span class="p">;</span>
+
+    <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="nx">matches</span> <span class="o">=</span> <span class="nx">message</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">base64Regex</span><span class="p">))</span> <span class="o">!=</span> <span class="kc">null</span> <span class="p">){</span>
+	<span class="nx">matches</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">evidence</span><span class="p">){</span>
+
+	    <span class="kd">var</span> <span class="nx">decodedEvidence</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">JavaString</span><span class="p">(</span><span class="nx">base64Decoder</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="nx">evidence</span><span class="p">));</span>
+
+	    <span class="nx">helper</span><span class="p">.</span><span class="nx">newAlert</span><span class="p">()</span>
+		<span class="p">.</span><span class="nx">setRiskConfidence</span><span class="p">(</span><span class="nx">RISK_INFO</span><span class="p">,</span> <span class="nx">CONFIDENCE_MEDIUM</span><span class="p">)</span>
+		<span class="p">.</span><span class="nx">setName</span><span class="p">(</span><span class="s2">"Base64 Disclosure in WebSocket message (script)"</span><span class="p">)</span>
+		<span class="p">.</span><span class="nx">setDescription</span><span class="p">(</span><span class="s2">"A Base64-encoded string has been found in the websocket incoming message. Base64-encoded data may contain sensitive "</span> <span class="o">+</span>
+				<span class="s2">"information such as usernames, passwords or cookies which should be further inspected. Decoded evidence: "</span>
+				<span class="o">+</span> <span class="nx">decodedEvidence</span> <span class="o">+</span> <span class="s2">"."</span><span class="p">)</span>
+		<span class="p">.</span><span class="nx">setSolution</span><span class="p">(</span><span class="s2">"Base64-encoding should not be used to store or send sensitive information."</span><span class="p">)</span>
+		<span class="p">.</span><span class="nx">setEvidence</span><span class="p">(</span><span class="nx">evidence</span><span class="p">)</span>
+		<span class="p">.</span><span class="nx">raise</span><span class="p">();</span>
+	<span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">getName</span><span class="p">(){</span>
+    <span class="k">return</span> <span class="s2">"Base64 Disclosure script"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">getId</span><span class="p">(){</span>
+    <span class="k">return</span> <span class="mi">110002</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-4" class="outline-4">
+<h4 id="sec-2-3-4">Case 3: Username Disclosure</h4>
+<div class="outline-text-4" id="text-2-3-4">
+<p>
+<i>(Based on <a href="https://github.com/zaproxy/zap-extensions/blob/master/addOns/websocket/src/main/zapHomeFiles/scripts/templates/websocketpassive/Username%2520Idor%2520Scanner.js">Username Disclosure Script</a>)</i>
+</p>
+
+<p>
+Finally, we are going to examine the Username Disclosure script. I consider
+this script as "sophisticated" one as it is accessing internal ZAP
+data structure. 
+</p>
+
+<p>
+<b><b>Use case:</b></b> Let's assume that you are suspecting that the web application
+you are checking sends usernames and passwords via
+WebSocket. You also suspect that the username hashed with a common
+hashing algorithm before was sent via WebSocket connection. In order to check this
+you have to create a script which is checking patterns of common hashes of
+usernames which are used. You provide the usernames to the Web Application
+by using a login form. 
+</p>
+
+<p>
+You can tell ZAP that you are using credential for a specific
+Web Application by adding them in <code>Context</code>. 
+</p>
+
+<p>
+<b><b>Hands on Section:</b></b> Visit <a href="http://websocket.org/echo.html">http://websocket.org/echo.html</a> as before. Create a new
+context, use as root node the <a href="http://echo.websocket.org">http://echo.websocket.org</a>, then set up the
+authentication mechanism in your context (by right clicking on them ;)
+<code>Session Properties -&gt; Authentication -&gt; Form-Based Authentication</code>, and add
+a <code>User</code> in <code>Session Properties -&gt; User -&gt; Add</code>. 
+</p>
+
+<p>
+In order to check formally if a username is transmitted over the WebSocket
+protocol we have to access <code>Contexts</code> and the stored
+<code>Users</code>. In order to access them we should access the following internal ZAP
+classes:
+</p>
+
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">Model</span> <span class="o">=</span> <span class="nx">Java</span><span class="p">.</span><span class="nx">type</span><span class="p">(</span><span class="s2">"org.parosproxy.paros.model.Model"</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">Control</span> <span class="o">=</span> <span class="nx">Java</span><span class="p">.</span><span class="nx">type</span><span class="p">(</span><span class="s2">"org.parosproxy.paros.control.Control"</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">ExtensionUserManagement</span> <span class="o">=</span> <span class="nx">Java</span><span class="p">.</span><span class="nx">type</span><span class="p">(</span><span class="s2">"org.zaproxy.zap.extension.users.ExtensionUserManagement"</span><span class="p">);</span>
+</pre></div>
+
+<p>
+<code>Model</code> can provide us the access to ZAP contexts, while <code>Control</code> is used
+to obtain the <code>ExtensionUserManagement</code> class. 
+</p>
+
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">getUsers</span><span class="p">(){</span>
+    <span class="k">if</span><span class="p">((</span> <span class="nx">extUserManagment</span> <span class="o">=</span> <span class="nx">getExtensionUserManagment</span><span class="p">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">){</span>
+	<span class="nx">usersList</span>  <span class="o">=</span> <span class="p">[];</span>
+	<span class="kd">var</span> <span class="nx">contexts</span> <span class="o">=</span> <span class="nx">Model</span><span class="p">.</span><span class="nx">getSingleton</span><span class="p">().</span><span class="nx">getSession</span><span class="p">().</span><span class="nx">getContexts</span><span class="p">();</span>
+	<span class="kd">var</span> <span class="nx">context</span><span class="p">;</span>
+
+	<span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">contexts</span><span class="p">.</span><span class="nx">size</span><span class="p">();</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+	    <span class="nx">context</span> <span class="o">=</span> <span class="nx">contexts</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+	    <span class="kd">var</span> <span class="nx">contextUsers</span> <span class="o">=</span> <span class="nx">extUserManagment</span><span class="p">.</span><span class="nx">getContextUserAuthManager</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">getIndex</span><span class="p">()).</span><span class="nx">getUsers</span><span class="p">();</span>
+	    <span class="k">if</span><span class="p">(</span><span class="nx">contextUsers</span><span class="p">.</span><span class="nx">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">){</span>
+		<span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">contextUsers</span><span class="p">.</span><span class="nx">size</span><span class="p">();</span> <span class="nx">j</span><span class="o">++</span> <span class="p">){</span>
+		    <span class="nx">usersList</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">contextUsers</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">j</span><span class="p">));</span>
+		<span class="p">}</span>
+	    <span class="p">}</span>
+	<span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">usersList</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">getExtensionUserManagment</span><span class="p">(){</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">extUserManagment</span> <span class="o">==</span> <span class="kc">null</span><span class="p">){</span>
+	<span class="nx">extUserManagment</span> <span class="o">=</span> <span class="nx">Control</span><span class="p">.</span><span class="nx">getSingleton</span><span class="p">()</span>
+	    <span class="p">.</span><span class="nx">getExtensionLoader</span><span class="p">()</span>
+	    <span class="p">.</span><span class="nx">getExtension</span><span class="p">(</span><span class="nx">ExtensionUserManagement</span><span class="p">.</span><span class="kr">class</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">extUserManagment</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>
+In addition to that we are using the <code>Appache Commons Codec</code>
+library, which came bundled with ZAP, to hash the usernames.
+</p>
+
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">DigestUtils</span> <span class="o">=</span> <span class="nx">Java</span><span class="p">.</span><span class="nx">type</span><span class="p">(</span><span class="s2">"org.apache.commons.codec.digest.DigestUtils"</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">getHashes</span><span class="p">(</span><span class="nx">username</span><span class="p">){</span>
+    <span class="kd">var</span> <span class="nx">usernameHashes</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="nx">usernameHashes</span><span class="p">[</span><span class="s1">'MD2'</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="nx">DigestUtils</span><span class="p">.</span><span class="nx">md2Hex</span><span class="p">(</span><span class="nx">username</span><span class="p">),</span> <span class="s1">'gmi'</span><span class="p">);</span>
+    <span class="nx">usernameHashes</span><span class="p">[</span><span class="s1">'MD5'</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="nx">DigestUtils</span><span class="p">.</span><span class="nx">md5Hex</span><span class="p">(</span><span class="nx">username</span><span class="p">),</span> <span class="s1">'gmi'</span><span class="p">);</span>
+    <span class="nx">usernameHashes</span><span class="p">[</span><span class="s1">'SHA1'</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="nx">DigestUtils</span><span class="p">.</span><span class="nx">sha1Hex</span><span class="p">(</span><span class="nx">username</span><span class="p">),</span> <span class="s1">'gmi'</span><span class="p">);</span>
+    <span class="nx">usernameHashes</span><span class="p">[</span><span class="s1">'SHA256'</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="nx">DigestUtils</span><span class="p">.</span><span class="nx">sha256Hex</span><span class="p">(</span><span class="nx">username</span><span class="p">),</span> <span class="s1">'gmi'</span><span class="p">);</span>
+    <span class="nx">usernameHashes</span><span class="p">[</span><span class="s1">'SHA384'</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="nx">DigestUtils</span><span class="p">.</span><span class="nx">sha384Hex</span><span class="p">(</span><span class="nx">username</span><span class="p">),</span> <span class="s1">'gmi'</span><span class="p">);</span>
+    <span class="nx">usernameHashes</span><span class="p">[</span><span class="s1">'SHA512'</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="nx">DigestUtils</span><span class="p">.</span><span class="nx">sha512Hex</span><span class="p">(</span><span class="nx">username</span><span class="p">),</span> <span class="s1">'gmi'</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nx">usernameHashes</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>
+It's quite obvious that in the next step we should just check the above
+patterns. This might seem difficult if not familiar with the code base,
+however it's not (I am not familiar with code base too). A great thing about ZAP
+is the fact it have plenty of passive and active rules available. 
+</p>
+
+<p>
+Firstly, I would like to refer to community scripts. Community scripts are
+developed by community and they are responsible for various "extra" rules
+that ZAP has. If you don't use them already, I totally recommend to give them a try by
+installing them via <code>Marketplace</code>. In the Community Scripts you can find all
+you need to develop a "sophisticated" WebSocket Passive Scanner script. In
+fact, some of the above scripts are based on existing HTTP scanning script (e.g. <a href="https://github.com/zaproxy/community-scripts/blob/master/passive/Find%2520Emails.js">Email
+Disclosure</a>).  
+</p>
+
+<p>
+If you don't find what you are searching for in the Community Scripts, then maybe you
+have to take look at the Java rules. Most of the above scripts are based on them. For
+example, the script in that last use case is inspired by and uses code blocks from the
+existing HTTP passive scan rule for Users Disclosure (<a href="https://github.com/zaproxy/zap-extensions/blob/master/addOns/pscanrulesBeta/src/main/java/org/zaproxy/zap/extension/pscanrulesBeta/UsernameIdorScanner.java">UsernameIdorScanner.java</a>). 
+</p>
+
+<p>
+<i>(The actual script is <a href="https://github.com/zaproxy/zap-extensions/blob/master/addOns/websocket/src/main/zapHomeFiles/scripts/templates/websocketpassive/Username%2520Idor%2520Scanner.js">Username Idor Scanner</a>)</i>
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">Tips and Tricks</h2>
+<div class="outline-text-2" id="text-3">
+<ol class="org-ol">
+<li>If you prefer your editor to write and modify the script this is not a problem.
+You can modify externally the scripts and when you save them, ZAP will
+prompt you to choose if you prefer to keep your external changes.
+</li>
+
+<li>If you need some help, use what works better for you from <a href="https://github.com/zaproxy/zaproxy#for-help-using-zap">here</a>.  
+</li>
+</ol>
+</div>
+</div>
+
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">Contribute to ZAP</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+There are many ways to contribute in ZAP. If you are interested in WebSocket
+Passive Scanning scripts, you can contribute your scripts in <a href="https://github.com/zaproxy/community-scripts/tree/master/websocketpassive">Community Scripts Repo</a>,
+PRs are more than welcome. In addition, if there is an intention to improve
+an existing default script or even add a new one, you can open an issue for
+enhancement in <a href="https://github.com/zaproxy/zaproxy">zaproxy repo</a> and discuss them with the ZAP community.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5">Acknowledgments</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+This projects is part of my GSoC'18 &amp; GSoC'19 participation. So I would like
+to thank Google Summer of Code for the opportunity. <b><b>Last but not least, I would like to thank my mentors <a href="https://twitter.com/psiinon">@psiinon</a>, <a href="https://twitter.com/kingthorin_rm">@kingthorin</a> and <a href="https://github.com/thc202">thc202</a> for the support and the extensively code review.</b></b>
+</p>
+</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/build-zap-with-intelij/" class="u-url">Build ZAP with InteliJ</a></h1>
         <div class="metadata">
             <p class="dateline"><a href="posts/build-zap-with-intelij/" rel="bookmark"><i class="fa fa-clock"></i> <time class="published dt-published" datetime="2019-05-16T15:23:12+03:00" title="2019-05-16 15:23">2019-05-16 15:23</time></a></p>
             <p class="byline author vcard"> <i class="fa fa-user"></i> <span class="byline-name fn" itemprop="author">
                 Manos Kirtas
             </span></p>
         </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1">Build zaproxy (ant-build)</h2>
 <div class="outline-text-2" id="text-1">
@@ -183,7 +1348,7 @@
                 Manos Kirtas
             </span></p>
         </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div class="figure">
 <p><img src="https://3.bp.blogspot.com/-qbcVeQlCj54/W-xm_OlMg5I/AAAAAAAABu8/KCnTxayUm1Y3TlpcQFQbsNK5nA6K5M6pgCLcBGAs/s200/GSoC+-+Vertical+Narrow+-+Gray+Text+-+White+BG.png" alt="GSoC+-+Vertical+Narrow+-+Gray+Text+-+White+BG.png"></p>
 </div>
@@ -222,7 +1387,7 @@ going to focus on <a href="https://github.com/zaproxy/zap-extensions/pull/1718">
                 Manos Kirtas
             </span></p>
         </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <p>
 In my <a href="https://manosmagnus.github.io/posts/GSoC_18/">GSoC'18 blog</a> you can find my previous proposal about WebSocket Active
 Scanning. There are also information related with ZAP functionality and problems
