@@ -15,10 +15,10 @@
   
   In this blog post we are going to demonstrate a brand new feature of OWASP
   Zed Attack Proxy (ZAP). Specifically, we are going to use the WebSocket add-on
-  in order to perform Passive Scanning of WebSocket messages. Even if you not
-  familiar with ZAP, this guide will try to be extensively enough to cover the
-  basics behind ZAP and give you the ability to perform and write WebSocket passive
-  scan rules. On the other hand, if you are already familiar with ZAP, you can
+  in order to perform Passive Scanning of WebSocket messages. Even if you are not
+  familiar with ZAP, this guide will try to be extensive enough to cover the
+  basics behind ZAP, and give you the ability to write and use WebSocket passive
+  scan rules. On the other hand, if you are already familiar with ZAP, you can 
   skip the introduction section and continue with the [[ws-pscan-scripts][WebSocket Passive Scan Scripts
   section]].  
 
@@ -27,7 +27,7 @@
   between the tester's browser and web application so that it can intercept and
   inspect messages sent between browser and the web application.
 
-  from [[https://github.com/zaproxy/zaproxy/releases/download/v2.8.0/ZAPGettingStartedGuide-2.8.pdf][Getting Started Guide (pdf)]].
+  /From [[https://github.com/zaproxy/zaproxy/releases/download/v2.8.0/ZAPGettingStartedGuide-2.8.pdf][Getting Started Guide (pdf)]]./
   #+END_QUOTE
 
   #+ATTR_HTML: :align center :width 400 height 200
@@ -35,7 +35,7 @@
 
 ** WebSocket Add-on
 
-   By default WebSocket Add-on is installed and it is responsible to intercept
+   By default the WebSocket Add-on is installed and it is responsible to intercept
    and inspect WebSocket messages and connections. Other functions like setting
    breakpoints, modify the content if needed, and then forward those messages to
    the destination are also available, however, it is out of the scope for this
@@ -51,26 +51,26 @@
 
     #+BEGIN_QUOTE
     The passive scans rules are used to warn the user of potential vulnerability
-    that can be detected passively - _they are not allowed to send any new WebSocket_
+    that can be detected passively - _they are not meant to send any new WebSocket_
     _message or manipulate the messages in any way_. They typically run against
-    all of the WebSocket messages that flow though ZAP. Passive rules run in
-    separate background thread so that they have as little effect on performance
+    all of the WebSocket messages that flow through ZAP. Passive rules run in
+    a separate background thread so that they have as little effect on performance
     as possible. 
 
-    /from [[https://zaproxy.blogspot.com/2014/04/hacking-zap-3-passive-scan-rules.html][ZAP blog]], (modified in order to fit the WebSocket Passive scan case)/
+    /From [[https://zaproxy.blogspot.com/2014/04/hacking-zap-3-passive-scan-rules.html][ZAP blog]], (modified in order to fit the WebSocket Passive scan case)/
     #+END_QUOTE
     
     At the end, what we want from the WebSocket Passive scan is to check all
-    WebSocket message's payloads for information which might reveal the
-    existence of an issue/vulnerability (e.x. an internal error).
+    WebSocket message payloads for information which might reveal the
+    existence of an issue/vulnerability (e.x. an internal server error).
 
     **Hands on Section:**    
-    /Open ZAP and configure your browser ([[https://github.com/zaproxy/zap-core-help/wiki/HelpStartStart][Getting Started (wiki)]]). Open/
-    /http://websocket.org/echo.html in your configured browser, connect to the/
-    /WebSocket Server and send some messages./
+    Open ZAP and configure your browser ([[https://github.com/zaproxy/zap-core-help/wiki/HelpStartStart][Getting Started (wiki)]]). Open
+    http://websocket.org/echo.html in your configured browser, connect to the
+    WebSocket Server and send some messages.
 
     Let's assume now that somehow (we will see that in a following section) ZAP
-    found an issue in your WebSocket traffic, how you can be informed? By Alerts
+    found an issue in your WebSocket traffic, how you can be informed? By Alerts.
     
 ** Alerts     
 
@@ -86,7 +86,7 @@
     [[../../images/pscan-tutorial/alert_panel_1.png]] 
 
     An Alert is raised by a scanner (we are going to see how in a while) which
-    gives them some properties. In the WebSocket Passive scan the properties
+    gives it some properties. In the WebSocket Passive scan the properties
     which are essential and displayed in the Alert panel are the following:
 
     + Name (title): The name of the alert
@@ -111,7 +111,7 @@
     Case 1: Write an email address (like mail@zaproxy.com) and send it. See what alert
     was raised. 
 
-    Case 2: Encode "Hello World" with Base64 (SGVsbG8gV29ybGQ=) and sent it. 
+    Case 2: Encode "Hello World" with Base64 (SGVsbG8gV29ybGQ=) and send it. 
     See what alert was raised. 
     
     Case 3: Type some valid XML with the following comment in it : 
@@ -168,28 +168,31 @@
 
    ZAP defines =Templates= in order to be used as base scripts. As we will see
    in a while every kind of scripts should perform a specific operation. For
-   instance a WebSocket Passive Scanning script defines a set rules that
+   instance, a WebSocket Passive Scanning script defines a set of rules that
    WebSocket messages should adhere to. In addition, =Templates= are not
    runnable, enablable or directly editable, they are used only as templates. In
    order to use a template, right click on it and then hit =New script...=. 
 
    **Hands on Section:**
-   Go to the template script =Base64 Disclosure.js=, right click on it, change
-   =Script Name= to =MyBase64 Disclosure.js= and hit save. See what happened.
+   Go to the template script =Base64 Disclosure.js=, right click on it, and hit
+   =New Script...= rename  =Script Name= to =MyBase64 Disclosure.js= and hit
+   save. See what happened. 
 
    =Scripts=, on the other hand, are the actual scripts which are run by ZAP.
    There are a good many possibilities in which we can use scripts,
    however, in this guide we are interested in WebSocket Passive Scanning.
    Passive Scripts have two states, enabled and disabled. When a script is
-   disabled that means
-   that it is not running at all. Other options like =duplicate= script or =remove= script are
-   available by right clicking on them. **You should always remember that Right**
-   **Click in ZAP is your best friend.** By default, the folders under =Scripts=
-   are empty, except from the =WebSocket Passive Rules=. If you want to explore
-   more the scripting techniques and add some rules in ZAP, I totally recommend
-   to install =Community Scripts= from =marketplace=. 
+   disabled that means that it is not running at all. Other options like
+   =duplicate= script or =remove= script are available by right clicking on
+   them. **You should always remember that Right Click in ZAP is your best
+   friend.** If a script failed (e.x. syntax error), exceptions messages will be
+   displayed in Scripts Console and the script will be automatically disabled.
+   By default, the folders under =Scripts= are empty, except from the =WebSocket
+   Passive Rules=. If you want to explore more the scripting techniques and add
+   some rules in ZAP, I totally recommend to install =Community Scripts= from
+   =marketplace=.  
    
-   **Hands On Section:**
+   **Hands on Section:**
    Go to the script that was created before. If it is not disabled, then disable it
    using right click. Navigate over the code and find the following line: 
    
@@ -199,12 +202,12 @@
    
    make it =true=, enable and save the script. 
 
-   Passive scan scripts are running against all messages, as result we do not have to
-   run them explicitly. So the only we have to do is to enable them, and when
-   some messages will be transmitted via the WebSocket connection the scripts will
+   Passive scan scripts are running against all messages, as a result we do not have to
+   run them explicitly. So the only thing we have to do is to enable them, and when
+   some messages will be transmitted via the WebSocket connections the scripts will
    be triggered.
 
-   **Hands On Section:** Connect to http://websocket.org/echo.html websocket
+   **Hands on Section:** Connect to http://websocket.org/echo.html websocket
    server as before, encode "Hello World" with a Base64 encoder
    (SGVsbG8gV29ybGQ=) and send it. See what was printed in the scripts console.
    
@@ -221,9 +224,9 @@
      .setEvidence(evidence)
      .raise();
    #+END_SRC
-   and change the name of the alert. Send the Encoded "Hello World" once again
-   and then go to =Alert Panel= and see what happened. Finally, remove the
-   script using right click.
+   and change the name of the alert. Re-enable the script. Send the Encoded
+   "Hello World" once again and then go to the =Alert Panel= and see what happened.
+   Finally, remove the script using right click.
 
    #+ATTR_HTML: :align center :width 900 height 400
    #+CAPTION: Alert which is raised by MyBase64 script
@@ -236,9 +239,9 @@
   By default ZAP comes with various WebSocket Passive Scan Scripts. Default
   Scripts are scanning passively the WebSocket Messages in order to disclosure
   information which might be useful for the user while testing a Web
-  Application. As we saw before scripts are classified into two categories,
+  Application. As we saw before, scripts are classified into two categories,
   =Templates= and =Scripts=. Default scripts are located in both categories.
-  Those which are in =Scripts= category are one which actually run against
+  Those which are in =Scripts= category are ones which actually run against
   the WebSocket Messages. You can modify them any 
   time you want or even remove them. By default those passive scan scripts are
   enabled and they are located under =<ZAP Home>/scripts/scripts/websocketpassive=
@@ -423,7 +426,7 @@ function getId(){
       
 ** Write your own scripts
    
-   That's awesome in ZAP is the ability easily write your own rules. In this section
+   What's awesome in ZAP is the ability easily write your own rules. In this section
    we are going to write 4 different rules, from a dummy one to more "sophisticated"
    ones. In this guide I am using JavaScript but the same procedure would be
    possible using Jython with only slightly difference in syntax.      
@@ -475,7 +478,7 @@ function getId(){
     guide we are going to use only JavaScript rules, however, the procedure is
     the same for other available scripting languages as well. 
 
-    **Hands On:** Create a new template from =Passive WebSocket Scan
+    **Hands on Section:** Create a new template from =Passive WebSocket Scan
     Template.js=, name it =GreaterThan10.js= and hit save. 
 
     Let's take a look at the template script. The first few lines are constants which
@@ -499,7 +502,7 @@ function getId(){
     CONFIDENCE_HIGH = 3;
     #+END_SRC
     
-    **Hands On:** Keep only the constants which are useful for our case (e.g.
+    **Hands on Section:** Keep only the constants which are useful for our case (e.g.
       =OPCODE_TEXT=, =RISK_INFO=, =CONFIDENCE_HIGH=). 
       
     Template script also contains help content with functions and variables
@@ -553,21 +556,21 @@ function getId(){
     It's quite common in passive scan rules to check first if the message has
     the properties we want. 
 
-    **Hands on:** Remove the default code in =scan(helper, msg)=, then 
+    **Hands on Section:** Remove the default code in =scan(helper, msg)=, then 
       check if the message has those properties (be outgoing and has text
       opcode) and keep them for examination else return without doing anything. 
       
     When it is required to examine the payload we have to extract the payload of
     the WebSocket message. 
     
-    **Hands on:** Get the payload and check if it has more than 10 characters.
+    **Hands on Section:** Get the payload and check if it has more than 10 characters.
 
-    If the payload do not pass the rule =payload.length < 10= then we have to
-    raise an alert in order to inform ourselves that a message paylaod violate
+    If the payload  has  =payload.length > 10= then we have to
+    raise an alert in order to inform ourselves that a message payload violate
     our rule. Raise an alert by using =helper.newAlert()= and build the alert
     accordingly. 
 
-    **Hands on:** Raise an alert with a Name, Risk & Confidence, evidence
+    **Hands on Section:** Raise an alert with a Name, Risk & Confidence, evidence
       and description. **Save and Enable the script**
 
     #+BEGIN_SRC js 
@@ -587,7 +590,7 @@ function getId(){
               helper.newAlert()
                   .setRiskConfidence(RISK_INFO, CONFIDENCE_HIGH)
                   .setName("Greater Than 10 (Script)")
-                  .setDescription("The paylaod has more than 10 characters")
+                  .setDescription("The payload has more than 10 characters")
                   .setEvidence(payload)
                   .raise();
           }
@@ -601,7 +604,7 @@ function getId(){
     patterns in rules. In this rule we want a pattern in order to identify email
     addresses in WebSocket messages payloads. This script is
     straightforward as it uses just a regular expression to match the pattern
-    with the incoming message paylaod.
+    with the incoming message payload.
 
     When we are using patterns the best way is to set the =evidence=, of the alert,
     to the matching characters in order to be informed about the potential
@@ -656,7 +659,7 @@ function getId(){
 
     Base64 disclosure script is based also in pattern matching. However, it's
     interesting because it uses Java build-in libraries. You can easily
-    define Java instances and types as following:
+    define Java instances and types as follows:
 
     #+BEGIN_SRC js
     base64Decoder = java.util.Base64.getDecoder();
@@ -730,7 +733,7 @@ function getId(){
     
     **Use case:** Let's assume that you are suspecting that the web application
     you are checking sends usernames and passwords via
-    WebSocket. You are also suspect that the username hashed with a common
+    WebSocket. You also suspect that the username hashed with a common
     hashing algorithm before was sent via WebSocket connection. In order to check this
     you have to create a script which is checking patterns of common hashes of
     usernames which are used. You provide the usernames to the Web Application
@@ -739,7 +742,7 @@ function getId(){
     You can tell ZAP that you are using credential for a specific
     Web Application by adding them in =Context=. 
 
-    **Hands on:** Visit http://websocket.org/echo.html as before. Create a new
+    **Hands on Section:** Visit http://websocket.org/echo.html as before. Create a new
     context, use as root node the http://echo.websocket.org, then set up the
     authentication mechanism in your context (by right clicking on them ;)
     =Session Properties -> Authentication -> Form-Based Authentication=, and add
@@ -747,7 +750,7 @@ function getId(){
     
     In order to check formally if a username is transmitted over the WebSocket
     protocol we have to access =Contexts= and the stored
-    =Users=. In order to access them we should access the following Internal ZAP
+    =Users=. In order to access them we should access the following internal ZAP
     classes:
     
     #+BEGIN_SRC js
@@ -789,7 +792,7 @@ function getId(){
       }
     #+END_SRC
     
-    In addition to that with that we are using the =Appache Commons Codec=
+    In addition to that we are using the =Appache Commons Codec=
     library, which came bundled with ZAP, to hash the usernames.
     
     #+BEGIN_SRC js    
@@ -810,22 +813,21 @@ function getHashes(username){
     
     It's quite obvious that in the next step we should just check the above
     patterns. This might seem difficult if not familiar with the code base,
-    however it's not (I am not familiar with code base too). The great about ZAP
-    is the fact that have plenty of passive and active rules available. 
+    however it's not (I am not familiar with code base too). A great thing about ZAP
+    is the fact it have plenty of passive and active rules available. 
 
     Firstly, I would like to refer to community scripts. Community scripts are
     developed by community and they are responsible for various "extra" rules
     that ZAP has. If you don't use them already, I totally recommend to give them a try by
-    install them via =Marketplace=. In the Community Scripts you can find all
+    installing them via =Marketplace=. In the Community Scripts you can find all
     you need to develop a "sophisticated" WebSocket Passive Scanner script. In
-    fact, some of the above scripts are based on existing script (e.g. [[https://github.com/zaproxy/community-scripts/blob/master/passive/Find%2520Emails.js][Email
+    fact, some of the above scripts are based on existing HTTP scanning script (e.g. [[https://github.com/zaproxy/community-scripts/blob/master/passive/Find%2520Emails.js][Email
     Disclosure]]).  
 
     If you don't find what you are searching for in the Community Scripts, then maybe you
     have to take look at the Java rules. Most of the above scripts are based on them. For
-    example, script in this use case is inspired and uses code blocks from the
-    an existing HTTP passive scan rule for Users Disclosure
-    ([[https://github.com/zaproxy/zap-extensions/blob/master/addOns/pscanrulesBeta/src/main/java/org/zaproxy/zap/extension/pscanrulesBeta/UsernameIdorScanner.java][UsernameIdorScanner.java]]). 
+    example, the script in that last use case is inspired by and uses code blocks from the
+    existing HTTP passive scan rule for Users Disclosure ([[https://github.com/zaproxy/zap-extensions/blob/master/addOns/pscanrulesBeta/src/main/java/org/zaproxy/zap/extension/pscanrulesBeta/UsernameIdorScanner.java][UsernameIdorScanner.java]]). 
     
     /(The actual script is [[https://github.com/zaproxy/zap-extensions/blob/master/addOns/websocket/src/main/zapHomeFiles/scripts/templates/websocketpassive/Username%2520Idor%2520Scanner.js][Username Idor Scanner]])/
 
