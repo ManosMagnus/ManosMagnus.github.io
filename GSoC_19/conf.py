@@ -191,7 +191,7 @@ THEME_CONFIG = {
         'featured_strip_html': False,
         # Contents of the sidebar, If empty, the sidebar is not displayed.
         'sidebar': '',
-        'previewimage': "./files/images/zap512x512.png"
+        'previewimage': '/files/images/zap512x512.png'
     }
 }
 
