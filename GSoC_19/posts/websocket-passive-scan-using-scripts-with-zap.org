@@ -151,35 +151,37 @@
 
    and many more...
    
-   /from [[https://github.com/zaproxy/zap-core-help/wiki/HelpAddonsScriptsScripts][wiki]]/
+   /From ZAP's [[https://github.com/zaproxy/zap-core-help/wiki/HelpAddonsScriptsScripts][wiki]]/
    #+END_QUOTE
 
-   Referring to scripts console add-on we are referring to the ability that the
+   Referring on scripts console add-on we are referring to the ability that the
    user has to write scripts which implement various behaviors like scans, fuzzing etc.
    Scripts Console add-on has a panel where the scripts are displayed. The panel
    has a tree structure, which has two branches, the =Scripts= branch and
    =Templates=. In both branches there are some folders which are referring on
-   different kind of scripts. As you can see those folders in both branches have
-   the same names.  
+   different kinds of scripts. As you can see those folders in both branches have
+   the same names.
 
    #+ATTR_HTML: :align center :width 300 height 800
    #+CAPTION: Scripts Tree Sidebar
    [[../../images/pscan-tutorial/scripts_tree.png]]
 
-   ZAP defines =Templates= in order to be used as base scripts. As we will see in
-   a while every kind of script should implement a specific functionality, named
-   rule. In addition, =Templates= are not runnable, enablable or directly
-   editable, they are used only as templates. In order to use a template, right
-   click on it and then hit =New script...=. 
+   ZAP defines =Templates= in order to be used as base scripts. As we will see
+   in a while every kind of scripts should perform a specific operation. For
+   instance a WebSocket Passive Scanning script defines a set rules that
+   WebSocket messages should adhere to. In addition, =Templates= are not
+   runnable, enablable or directly editable, they are used only as templates. In
+   order to use a template, right click on it and then hit =New script...=. 
 
-   **Hands On Section:**
+   **Hands on Section:**
    Go to the template script =Base64 Disclosure.js=, right click on it, change
    =Script Name= to =MyBase64 Disclosure.js= and hit save. See what happened.
 
    =Scripts=, on the other hand, are the actual scripts which are run by ZAP.
    There are a good many possibilities in which we can use scripts,
    however, in this guide we are interested in WebSocket Passive Scanning.
-   Passive Scripts have two states, enable and disable. When a script is disabled means
+   Passive Scripts have two states, enabled and disabled. When a script is
+   disabled that means
    that it is not running at all. Other options like =duplicate= script or =remove= script are
    available by right clicking on them. **You should always remember that Right**
    **Click in ZAP is your best friend.** By default, the folders under =Scripts=
